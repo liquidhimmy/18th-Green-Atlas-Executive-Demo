@@ -79,7 +79,7 @@ def test_golden_path_approve_changeset():
     d = r.json()
     assert d["state"]["version"] == "v3.0"
     assert d["state"]["trustee"] == "Maya Harrington"
-    assert d["obligation"]["status"] == "OPEN"
+    assert d["event"]["id"] == "evt_succession"
 
     # verify persistence
     m = requests.get(f"{API}/matter", timeout=15).json()

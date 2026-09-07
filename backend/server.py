@@ -100,6 +100,9 @@ def build_harrington():
         "matter_type": "Revocable Living Trust", "jurisdiction": "Georgia, USA", "officer": "James Morgan",
         "established": "1987", "interactive": True, "image": "harrington",
         "tagline": "Generations are linked by more than assets — they're bound by responsibility.",
+        "pending_source": {"name": "Successor Acceptance & Resignation Instrument.pdf", "type": "Successor Acceptance & Resignation Instrument",
+                           "headline": "A new source has arrived for this Matter",
+                           "description": "Successor-trustee condition may be satisfied. Move through the governed change workflow: upload → extract → verify → ChangeSet → establish state."},
         "people": people, "structures": structures, "assets": assets, "states": states, "sources": sources,
         "claims": [], "changesets": [], "events": events, "obligations": obligations,
         "beneficiary_impacts": [], "rac": [], "communications": [],
@@ -157,76 +160,190 @@ def build_morgan():
         {"version": "v1.0", "status": "SUPERSEDED", "title": "Trust Established", "trustee": "Thomas Morgan", "trustee_status": "CURRENT", "effective_time": "1998-05-10", "recorded_time": "1998-05-14", "verified_time": "1998-05-16", "released_time": "1998-05-16", "summary": "Morgan Family Irrevocable Trust established.", "authority": "Trust Agreement, Article I"},
         {"version": "v2.0", "status": "SUPERSEDED", "title": "First Amendment", "trustee": "Thomas Morgan", "trustee_status": "CURRENT", "effective_time": "2011-02-01", "recorded_time": "2011-02-10", "verified_time": "2011-02-12", "released_time": "2011-02-12", "summary": "Trustee succession to Thomas Morgan incorporated.", "authority": "First Amendment"},
         {"version": "v3.0", "status": "SUPERSEDED", "title": "Asset Restructure", "trustee": "Thomas Morgan", "trustee_status": "CURRENT", "effective_time": "2018-06-01", "recorded_time": "2018-06-08", "verified_time": "2018-06-10", "released_time": "2018-06-10", "summary": "Holdings LLC interest contributed and revalued.", "authority": "Trustee Resolution 2018-06"},
-        {"version": "v4.0", "status": "SUPERSEDED", "title": "Investment Policy Update", "trustee": "Thomas Morgan", "trustee_status": "CURRENT", "effective_time": "2024-01-15", "recorded_time": "2024-01-20", "verified_time": "2024-01-22", "released_time": "2024-01-22", "summary": "Investment policy statement updated for diversification.", "authority": "IPS 2024"},
-        {"version": "v5.0", "status": "CURRENT", "title": "Discretionary Distribution Approved", "trustee": "Thomas Morgan", "trustee_status": "CURRENT", "effective_time": "2026-05-20", "recorded_time": "2026-05-24", "verified_time": "2026-05-26", "released_time": "2026-05-26", "summary": "A $250,000 discretionary distribution to Daniel Morgan was reviewed and approved under the HEMS standard.", "authority": "Trust Agreement, Article V §2.4"},
+        {"version": "v4.0", "status": "CURRENT", "title": "Investment Policy Update", "trustee": "Thomas Morgan", "trustee_status": "CURRENT", "effective_time": "2024-01-15", "recorded_time": "2024-01-20", "verified_time": "2024-01-22", "released_time": "2024-01-22", "summary": "Investment policy statement updated for diversification. Thomas Morgan remains trustee.", "authority": "IPS 2024"},
     ]
     sources = [
         {"id": "msrc_trust", "name": "Morgan Trust Agreement.pdf", "type": "Governing Instrument", "status": "VERIFIED", "uploaded": "1998-05-14", "size": "2.7 MB"},
         {"id": "msrc_ips", "name": "Investment Policy 2024.pdf", "type": "Policy", "status": "VERIFIED", "uploaded": "2024-01-20", "size": "640 KB"},
-        {"id": "msrc_dist", "name": "Distribution Request & Trustee Resolution.pdf", "type": "Distribution Instrument", "status": "VERIFIED", "uploaded": "2026-05-24", "size": "1.2 MB"},
     ]
     events = [
         {"id": "mevt_v1", "kind": "STATE_RELEASE", "title": "Trust Established", "date": "1998-05-16", "state_version": "v1.0", "summary": "Morgan Family Irrevocable Trust established and governed.", "icon": "landmark"},
+        {"id": "mevt_v2", "kind": "STATE_RELEASE", "title": "First Amendment", "date": "2011-02-12", "state_version": "v2.0", "summary": "Trustee succession to Thomas Morgan incorporated and released.", "icon": "file-text"},
         {"id": "mevt_v3", "kind": "STATE_RELEASE", "title": "Asset Restructure", "date": "2018-06-10", "state_version": "v3.0", "summary": "Holdings interest contributed; governed state re-released.", "icon": "file-text"},
         {"id": "mevt_v4", "kind": "STATE_RELEASE", "title": "Investment Policy Update", "date": "2024-01-22", "state_version": "v4.0", "summary": "Investment policy update reviewed and released.", "icon": "file-text"},
-        {"id": "mevt_dist", "kind": "CONSEQUENTIAL", "title": "Discretionary Distribution Approved", "date": "2026-05-26", "state_version": "v5.0",
-         "summary": "A discretionary distribution was reviewed and approved, linked to source authority, conduct, obligation, and beneficiary impact.", "icon": "refresh",
-         "trigger": "Beneficiary hardship / education funding request received.",
-         "authority": "Trust Agreement, Article V §2.4 (discretionary HEMS standard).",
-         "source": "Distribution Request & Trustee Resolution",
-         "verification": "James Morgan verified the request and trustee resolution against the distribution standard.",
-         "transition": {"from": "v4.0", "to": "v5.0", "changes": ["Discretionary distribution of $250,000 approved to Daniel Morgan", "Trust cash reserves adjusted"]},
-         "conduct": "Trustee Thomas Morgan approved the distribution under the HEMS standard.",
-         "obligation": "mob_rationale", "beneficiary_impact": "mbi_daniel", "evidence": "mev_v5",
-         "effective_time": "2026-05-20", "recorded_time": "2026-05-24", "verified_time": "2026-05-26", "released_time": "2026-05-26"},
     ]
     obligations = [
-        {"id": "mob_rationale", "title": "Document distribution rationale & complete pattern review", "owner": "James Morgan", "status": "OPEN", "due": "2026-05-28", "created_by": "mevt_dist", "severity": "EXCEPTION", "days_open": 4, "detail": "Record the written rationale for the discretionary distribution and complete the unusual-pattern review flagged by portfolio intelligence.", "lens": "fiduciary", "history": [{"time": now_iso(), "actor": "System", "action": "Obligation created from Discretionary Distribution Approved."}]},
         {"id": "mob_annual", "title": "Annual accounting to beneficiaries", "owner": "James Morgan", "status": "ON_TRACK", "due": "2026-12-31", "created_by": "mevt_v4", "standing": True, "detail": "Prepare and deliver the annual fiduciary accounting.", "lens": "fiduciary"},
         {"id": "mob_tax", "title": "File fiduciary income tax return (Form 1041)", "owner": "James Morgan", "status": "ON_TRACK", "due": "2026-04-15", "created_by": "mevt_v4", "standing": True, "detail": "Coordinate and file the trust return.", "lens": "fiduciary"},
+        {"id": "mob_ips", "title": "Investment policy compliance review", "owner": "David Chen", "status": "UPCOMING", "due": "2026-09-30", "created_by": "mevt_v4", "standing": True, "detail": "Confirm allocation remains within IPS 2024 bands.", "lens": "fiduciary"},
     ]
-    bi = [{"id": "mbi_daniel", "matter_id": MOR, "person_id": "m_daniel", "transition_id": "v4.0->v5.0", "impact_status": "ACTION_REQUIRED",
-           "what_changed": "A discretionary distribution of $250,000 was approved to you.", "what_did_not_change": "Your ongoing beneficiary status and future rights are unchanged.",
-           "what_it_means": "Funds will be released per the trustee resolution; the distribution may have tax reporting implications.", "action_required": "Please confirm your current mailing and banking details for the distribution."}]
-    rac = [
-        {"id": "mrac_fid", "event": "mevt_dist", "audience": "fiduciary", "title": "Fiduciary R.A.C. — Discretionary Distribution", "generated": "2026-05-26", "matter_id": MOR, "instrument_id": "ATL-MOR-00456-RAC-F-0005", "sections": [
+    evidence = [
+        {"id": "mev_v4", "matter_id": MOR, "instrument_id": "ATL-MOR-00456-EV-0004", "title": "Investment Policy Update — Governed Checkpoint", "state_version": "v4.0", "lifecycle": "RELEASED", "checkpoint_time": "2024-01-22", "hash": "7A2E-93BD-11C4-E6F0", "verification_class": "Human-verified · Source-linked", "prev_state": "v3.0", "successor_state": "—", "transition_type": "Policy update", "sources": ["Investment Policy 2024.pdf", "Morgan Trust Agreement.pdf"]},
+    ]
+    return {
+        "matter_id": MOR, "name": "Morgan Family Trust", "short": "Morgan", "status": "ACTIVE",
+        "matter_type": "Irrevocable Trust", "jurisdiction": "South Carolina, USA", "officer": "James Morgan",
+        "established": "1998", "interactive": True, "image": "morgan",
+        "tagline": "A legacy stewarded across generations, governed with discipline.",
+        "pending_source": {"name": "Distribution Request & Trustee Resolution.pdf", "type": "Distribution Instrument",
+                           "headline": "A distribution request has arrived for this Matter",
+                           "description": "Daniel Morgan has requested a discretionary distribution under the HEMS standard. Move through the governed change workflow: upload → extract → verify → ChangeSet → establish state."},
+        "people": people, "structures": structures, "assets": assets, "states": states, "sources": sources,
+        "claims": [], "changesets": [], "events": events, "obligations": obligations,
+        "beneficiary_impacts": [], "rac": [], "communications": [], "evidence_instruments": evidence,
+        "elicited_context": [],
+        "flow": {"source_uploaded": False, "claims_verified": False, "changeset_created": False, "changeset_approved": False, "obligation_escalated": False, "obligation_resolved": False},
+    }
+
+
+SEEDERS = {HAR: build_harrington, MOR: build_morgan}
+
+
+# ---------------------------------------------------------------------------
+# SCRIPTED GOLDEN PATHS (deterministic, per Matter)
+# ---------------------------------------------------------------------------
+def distribution_claims():
+    return [
+        {"id": "mcl_standard", "field": "Distribution Standard", "observed": "HEMS standard satisfied (education funding)", "authority": "Trust Agreement, Article V §2.4", "kind": "authority", "status": "OBSERVED", "confidence": 0.95, "note": "AI observation — requires human verification."},
+        {"id": "mcl_recipient", "field": "Daniel Morgan", "observed": "Recipient of discretionary distribution", "authority": "Trust Agreement, Article V §2.4", "kind": "person", "status": "OBSERVED", "confidence": 0.97, "note": "Primary beneficiary named in request."},
+        {"id": "mcl_amount", "field": "Distribution Amount", "observed": "$250,000 from Cash & Money Market", "authority": "Trustee Resolution 2026-05", "kind": "authority", "status": "OBSERVED", "confidence": 0.93, "note": "Amount stated in trustee resolution."},
+        {"id": "mcl_effective", "field": "Effective Date", "observed": "2026-05-20", "authority": "Trustee Resolution 2026-05", "kind": "date", "status": "OBSERVED", "confidence": 0.94, "note": "Effective time distinct from recorded time."},
+    ]
+
+
+def apply_succession(doc):
+    v3 = {"version": "v3.0", "status": "CURRENT", "title": "Successor Trustee Activated", "trustee": "Maya Harrington", "trustee_status": "CURRENT",
+          "effective_time": "2026-06-01", "recorded_time": today(), "verified_time": today(), "released_time": today(),
+          "summary": "Successor-trustee condition satisfied and verified. Maya Harrington activated as current trustee; Robert Harrington moved to inactive.", "authority": "Trust Agreement, Article VII §3.2"}
+    doc["states"].append(v3)
+    for p in doc["people"]:
+        if p["id"] == "p_robert":
+            p["status"], p["role"] = "INACTIVE", "Former Trustee"
+        if p["id"] == "p_maya":
+            p["status"], p["role"] = "CURRENT", "Current Trustee"
+    event = {"id": "evt_succession", "kind": "CONSEQUENTIAL", "title": "Successor Trustee Activation", "date": today(), "state_version": "v3.0",
+             "summary": "Trustee succession represented as one consequential event linking source, verification, state transition, conduct, obligation, and beneficiary impact.", "icon": "refresh",
+             "trigger": "Successor-trustee condition satisfied.", "authority": "Trust Agreement, Article VII §3.2", "source": "Successor Acceptance & Resignation Instrument",
+             "verification": "James Morgan verified claims against source authority.",
+             "transition": {"from": "v2.0", "to": "v3.0", "changes": ["Robert Harrington: CURRENT → INACTIVE", "Maya Harrington: STANDBY → CURRENT"]},
+             "conduct": "Fiduciary officer reviewed and confirmed succession documentation.", "obligation": "ob_notice", "beneficiary_impact": "bi_sarah", "evidence": "ev_v3",
+             "effective_time": "2026-06-01", "recorded_time": today(), "verified_time": today(), "released_time": today()}
+    doc["events"].append(event)
+    doc["obligations"] = [o for o in doc["obligations"] if o["id"] != "ob_notice"] + [
+        {"id": "ob_notice", "title": "Notify affected beneficiaries of trustee succession", "owner": "James Morgan", "status": "OPEN", "due": "2026-06-08", "created_by": "evt_succession", "severity": "NEEDS_ATTENTION",
+         "detail": "Deliver formal notice of trustee change to affected beneficiaries and record completion evidence.", "lens": "fiduciary", "days_open": 3,
+         "history": [{"time": now_iso(), "actor": "System", "action": "Obligation created from Successor Trustee Activation."}]}]
+    doc["beneficiary_impacts"] = [b for b in doc["beneficiary_impacts"] if b["id"] != "bi_sarah"] + [
+        {"id": "bi_sarah", "matter_id": HAR, "person_id": "p_sarah", "transition_id": "v2.0->v3.0", "impact_status": "INFORMATIONAL",
+         "what_changed": "Maya Harrington is now serving as your trustee.", "what_did_not_change": "Your beneficiary status and distribution rights are unchanged.",
+         "what_it_means": "Day-to-day administration of the trust continues under a new trustee.", "action_required": "No action is required from you at this time."}]
+    doc["rac"] = [r for r in doc["rac"] if r.get("event") != "evt_succession"] + [
+        {"id": "rac_fid", "event": "evt_succession", "audience": "fiduciary", "title": "Fiduciary R.A.C. — Successor Trustee Activation", "generated": today(), "matter_id": HAR, "instrument_id": "ATL-HAR-00217-RAC-F-0003", "sections": [
+            {"h": "What we did", "b": "Verified the successor-trustee condition and released a new governed state activating Maya Harrington as trustee."},
+            {"h": "Under what authority", "b": "Trust Agreement, Article VII §3.2, supported by the Successor Acceptance & Resignation Instrument."},
+            {"h": "What evidence supports it", "b": "Source document verified by James Morgan; claims confirmed against the governing instrument."},
+            {"h": "What state resulted", "b": "Governed checkpoint advanced from v2.0 (superseded) to v3.0 (current)."},
+            {"h": "What remains to be done", "b": "One open obligation: notify affected beneficiaries by 2026-06-08."}]},
+        {"id": "rac_ben", "event": "evt_succession", "audience": "beneficiary", "title": "Your R.A.C. Statement — Trustee Change", "generated": today(), "matter_id": HAR, "instrument_id": "ATL-HAR-00217-RAC-B-0003", "sections": [
+            {"h": "What happened", "b": "The trust transitioned to its named successor trustee, Maya Harrington."},
+            {"h": "What changed for you", "b": "Your point of contact for trustee matters is now Maya Harrington."},
+            {"h": "What did not change", "b": "Your status as a beneficiary and your distribution rights remain the same."},
+            {"h": "What it means for you", "b": "The trust continues to be administered on your behalf, without interruption."},
+            {"h": "Do I need to do anything?", "b": "No action is required from you at this time."},
+            {"h": "Who should I contact?", "b": "You may reach out to your fiduciary team with any questions."}]},
+        {"id": "rac_ov", "event": "evt_succession", "audience": "oversight", "title": "Oversight R.A.C. — Successor Trustee Activation", "generated": today(), "matter_id": HAR, "instrument_id": "ATL-HAR-00217-RAC-O-0003", "sections": [
+            {"h": "Consequential conduct", "b": "Verified succession and released governed state v3.0 (officer: James Morgan)."},
+            {"h": "Exceptions", "b": "Beneficiary notification obligation currently OPEN; monitor against expected window."},
+            {"h": "Obligations remaining", "b": "1 open — notify affected beneficiaries (due 2026-06-08)."},
+            {"h": "Evidence / confirmations", "b": "Source-linked instrument verified; state transition provenance recorded."},
+            {"h": "Supervisory attention", "b": "Attention warranted only if notice remains open beyond the expected window."},
+            {"h": "Next action owner", "b": "James Morgan (fiduciary officer)."}]},
+    ]
+    doc["evidence_instruments"] = [e for e in doc["evidence_instruments"] if e["id"] != "ev_v3"] + [
+        {"id": "ev_v3", "matter_id": HAR, "instrument_id": "ATL-HAR-00217-EV-0003", "title": "Successor Trustee Activation — Governed Transition", "state_version": "v3.0", "lifecycle": "RELEASED", "checkpoint_time": today(), "hash": "E7A3-9B2C-4F6D-A18B", "verification_class": "Human-verified · Source-linked", "prev_state": "v2.0", "successor_state": "—", "transition_type": "Successor trustee activation", "sources": ["Successor Acceptance & Resignation Instrument", "Trust Agreement.pdf"]}]
+    return v3, event
+
+
+def apply_distribution(doc):
+    v5 = {"version": "v5.0", "status": "CURRENT", "title": "Discretionary Distribution Approved", "trustee": "Thomas Morgan", "trustee_status": "CURRENT",
+          "effective_time": "2026-05-20", "recorded_time": today(), "verified_time": today(), "released_time": today(),
+          "summary": "A $250,000 discretionary distribution to Daniel Morgan was reviewed and approved under the HEMS standard. Trust cash reserves adjusted.", "authority": "Trust Agreement, Article V §2.4"}
+    doc["states"].append(v5)
+    for a in doc["assets"]:
+        if a["id"] == "ma_cash":
+            a["value"] = 470000
+    for p in doc["people"]:
+        if p["id"] == "m_daniel":
+            p["detail"] = "Primary beneficiary; recipient of the $250,000 discretionary distribution approved at v5.0."
+    event = {"id": "mevt_dist", "kind": "CONSEQUENTIAL", "title": "Discretionary Distribution Approved", "date": today(), "state_version": "v5.0",
+             "summary": "A discretionary distribution was reviewed and approved, linked to source authority, conduct, obligation, and beneficiary impact.", "icon": "refresh",
+             "trigger": "Beneficiary education funding request received.", "authority": "Trust Agreement, Article V §2.4 (discretionary HEMS standard).",
+             "source": "Distribution Request & Trustee Resolution",
+             "verification": "James Morgan verified the request and trustee resolution against the distribution standard.",
+             "transition": {"from": "v4.0", "to": "v5.0", "changes": ["Discretionary distribution of $250,000 approved to Daniel Morgan", "Cash & Money Market: $720,000 → $470,000"]},
+             "conduct": "Trustee Thomas Morgan approved the distribution under the HEMS standard.",
+             "obligation": "mob_rationale", "beneficiary_impact": "mbi_daniel", "evidence": "mev_v5",
+             "effective_time": "2026-05-20", "recorded_time": today(), "verified_time": today(), "released_time": today()}
+    doc["events"].append(event)
+    doc["obligations"] = [o for o in doc["obligations"] if o["id"] != "mob_rationale"] + [
+        {"id": "mob_rationale", "title": "Document distribution rationale & notify beneficiary", "owner": "James Morgan", "status": "OPEN", "due": "2026-06-10", "created_by": "mevt_dist", "severity": "EXCEPTION", "days_open": 4,
+         "detail": "Record the written rationale for the discretionary distribution, complete the unusual-pattern review flagged by portfolio intelligence, and deliver the distribution explanation to the beneficiary.", "lens": "fiduciary",
+         "history": [{"time": now_iso(), "actor": "System", "action": "Obligation created from Discretionary Distribution Approved."}]}]
+    doc["beneficiary_impacts"] = [b for b in doc["beneficiary_impacts"] if b["id"] != "mbi_daniel"] + [
+        {"id": "mbi_daniel", "matter_id": MOR, "person_id": "m_daniel", "transition_id": "v4.0->v5.0", "impact_status": "ACTION_REQUIRED",
+         "what_changed": "A discretionary distribution of $250,000 was approved to you.", "what_did_not_change": "Your ongoing beneficiary status and future rights are unchanged.",
+         "what_it_means": "Funds will be released per the trustee resolution; the distribution may have tax reporting implications.", "action_required": "Please confirm your current mailing and banking details for the distribution."}]
+    doc["rac"] = [r for r in doc["rac"] if r.get("event") != "mevt_dist"] + [
+        {"id": "mrac_fid", "event": "mevt_dist", "audience": "fiduciary", "title": "Fiduciary R.A.C. — Discretionary Distribution", "generated": today(), "matter_id": MOR, "instrument_id": "ATL-MOR-00456-RAC-F-0005", "sections": [
             {"h": "What we did", "b": "Reviewed and approved a $250,000 discretionary distribution to Daniel Morgan under the HEMS standard."},
             {"h": "Under what authority", "b": "Trust Agreement, Article V §2.4, supported by the trustee resolution."},
             {"h": "What evidence supports it", "b": "Distribution request and trustee resolution verified by James Morgan."},
             {"h": "What state resulted", "b": "Governed checkpoint advanced from v4.0 (superseded) to v5.0 (current)."},
-            {"h": "What remains to be done", "b": "Document the distribution rationale and complete the flagged pattern review (open)."}]},
-        {"id": "mrac_ben", "event": "mevt_dist", "audience": "beneficiary", "title": "Your R.A.C. Statement — Distribution Approved", "generated": "2026-05-26", "matter_id": MOR, "instrument_id": "ATL-MOR-00456-RAC-B-0005", "sections": [
+            {"h": "What remains to be done", "b": "Document the distribution rationale and deliver the distribution explanation to Daniel Morgan by 2026-06-10."}]},
+        {"id": "mrac_ben", "event": "mevt_dist", "audience": "beneficiary", "title": "Your R.A.C. Statement — Distribution Approved", "generated": today(), "matter_id": MOR, "instrument_id": "ATL-MOR-00456-RAC-B-0005", "sections": [
             {"h": "What happened", "b": "The trustee approved a discretionary distribution to you."},
             {"h": "What changed for you", "b": "A distribution of $250,000 has been approved for release."},
             {"h": "What did not change", "b": "Your ongoing beneficiary status is unchanged."},
             {"h": "What it means for you", "b": "Funds will be released; there may be tax reporting implications."},
             {"h": "Do I need to do anything?", "b": "Please confirm your current mailing and banking details."},
             {"h": "Who should I contact?", "b": "Reach out to your fiduciary team with any questions."}]},
-        {"id": "mrac_ov", "event": "mevt_dist", "audience": "oversight", "title": "Oversight R.A.C. — Discretionary Distribution", "generated": "2026-05-26", "matter_id": MOR, "instrument_id": "ATL-MOR-00456-RAC-O-0005", "sections": [
+        {"id": "mrac_ov", "event": "mevt_dist", "audience": "oversight", "title": "Oversight R.A.C. — Discretionary Distribution", "generated": today(), "matter_id": MOR, "instrument_id": "ATL-MOR-00456-RAC-O-0005", "sections": [
             {"h": "Consequential conduct", "b": "Trustee approved a $250,000 discretionary distribution (officer: James Morgan)."},
             {"h": "Exceptions", "b": "Portfolio intelligence flagged an unusual distribution pattern; rationale documentation is open."},
-            {"h": "Obligations remaining", "b": "1 open — document rationale & complete pattern review (due 2026-05-28)."},
+            {"h": "Obligations remaining", "b": "1 open — document rationale & notify beneficiary (due 2026-06-10)."},
             {"h": "Evidence / confirmations", "b": "Distribution instrument verified; state transition provenance recorded."},
             {"h": "Supervisory attention", "b": "Attention warranted — distribution size and pattern exceed baseline."},
             {"h": "Next action owner", "b": "James Morgan (fiduciary officer)."}]},
     ]
-    evidence = [
-        {"id": "mev_v5", "matter_id": MOR, "instrument_id": "ATL-MOR-00456-EV-0005", "title": "Discretionary Distribution — Governed Transition", "state_version": "v5.0", "lifecycle": "RELEASED", "checkpoint_time": "2026-05-26", "hash": "4B1D-77CE-2A90-F35E", "verification_class": "Human-verified · Source-linked", "prev_state": "v4.0", "successor_state": "—", "transition_type": "Discretionary distribution", "sources": ["Distribution Request & Trustee Resolution.pdf", "Morgan Trust Agreement.pdf"]},
-    ]
-    return {
-        "matter_id": MOR, "name": "Morgan Family Trust", "short": "Morgan", "status": "ACTIVE",
-        "matter_type": "Irrevocable Trust", "jurisdiction": "South Carolina, USA", "officer": "James Morgan",
-        "established": "1998", "interactive": False, "image": "morgan",
-        "tagline": "A legacy stewarded across generations, governed with discipline.",
-        "people": people, "structures": structures, "assets": assets, "states": states, "sources": sources,
-        "claims": [], "changesets": [], "events": events, "obligations": obligations,
-        "beneficiary_impacts": bi, "rac": rac, "communications": [], "evidence_instruments": evidence,
-        "elicited_context": [],
-        "flow": {"source_uploaded": True, "claims_verified": True, "changeset_created": True, "changeset_approved": True, "obligation_escalated": False, "obligation_resolved": False},
-    }
+    doc["evidence_instruments"] = [e for e in doc["evidence_instruments"] if e["id"] != "mev_v5"] + [
+        {"id": "mev_v5", "matter_id": MOR, "instrument_id": "ATL-MOR-00456-EV-0005", "title": "Discretionary Distribution — Governed Transition", "state_version": "v5.0", "lifecycle": "RELEASED", "checkpoint_time": today(), "hash": "4B1D-77CE-2A90-F35E", "verification_class": "Human-verified · Source-linked", "prev_state": "v4.0", "successor_state": "—", "transition_type": "Discretionary distribution", "sources": ["Distribution Request & Trustee Resolution.pdf", "Morgan Trust Agreement.pdf"]}]
+    return v5, event
 
 
-SEEDERS = {HAR: build_harrington, MOR: build_morgan}
+SCRIPTS = {
+    HAR: {
+        "source": {"id": "src_succession", "type": "Successor Acceptance & Resignation Instrument", "default_name": "Successor Trustee Instrument.pdf", "size": "1.4 MB"},
+        "claims": succession_claims,
+        "changeset": {"id": "cs_succession", "title": "Successor Trustee Activation", "authority": "Trust Agreement, Article VII §3.2",
+                      "changes": [
+                          {"id": "ch1", "type": "PERSON", "label": "Robert Harrington — trustee role", "before": "CURRENT", "after": "INACTIVE", "impact": "HIGH"},
+                          {"id": "ch2", "type": "PERSON", "label": "Maya Harrington — trustee role", "before": "STANDBY", "after": "CURRENT", "impact": "HIGH"},
+                          {"id": "ch3", "type": "STATE", "label": "Governed checkpoint", "before": "v2.0", "after": "v3.0", "impact": "MEDIUM"}],
+                      "consequences": ["Establishes a new governed state (v3.0).", "Creates an obligation to notify affected beneficiaries.", "Prior state (v2.0) becomes SUPERSEDED — not overwritten."]},
+        "apply": apply_succession,
+    },
+    MOR: {
+        "source": {"id": "msrc_dist", "type": "Distribution Instrument", "default_name": "Distribution Request & Trustee Resolution.pdf", "size": "1.2 MB"},
+        "claims": distribution_claims,
+        "changeset": {"id": "cs_distribution", "title": "Discretionary Distribution Approval", "authority": "Trust Agreement, Article V §2.4",
+                      "changes": [
+                          {"id": "ch1", "type": "ASSET", "label": "Cash & Money Market — balance", "before": "$720,000", "after": "$470,000", "impact": "HIGH"},
+                          {"id": "ch2", "type": "PERSON", "label": "Daniel Morgan — distribution", "before": "NONE PENDING", "after": "$250,000 APPROVED", "impact": "HIGH"},
+                          {"id": "ch3", "type": "STATE", "label": "Governed checkpoint", "before": "v4.0", "after": "v5.0", "impact": "MEDIUM"}],
+                      "consequences": ["Establishes a new governed state (v5.0).", "Creates an obligation to document rationale and notify the beneficiary.", "Prior state (v4.0) becomes SUPERSEDED — not overwritten."]},
+        "apply": apply_distribution,
+    },
+}
 
 EXTRA_BOOK = [
     {"id": "ATL-CAR-00789", "name": "Carter Living Trust", "officer": "Angela Ruiz", "status": "ACTIVE", "checkpoint": "v3.0", "health": "NEEDS_ATTENTION", "days_flag": 6, "reason": "Overdue obligation: beneficiary notice.", "primary": False, "navigable": False},
@@ -293,8 +410,7 @@ async def resolve_featured(doc, comm_summary, comm_type="Beneficiary Communicati
     ob["status"] = "SATISFIED"
     ob["completion_evidence"] = comm_summary
     ob.setdefault("history", []).append({"time": now_iso(), "actor": doc["officer"], "action": f"{comm_type} sent; completion evidence attached. Obligation satisfied."})
-    if doc["matter_id"] == HAR:
-        doc["flow"]["obligation_resolved"] = True
+    doc["flow"]["obligation_resolved"] = True
     # bump state
     for s in doc["states"]:
         if s["status"] == "CURRENT":
@@ -387,10 +503,14 @@ async def get_portfolio():
 async def upload_source(matter_id: str = Query(HAR), file: UploadFile = File(None), filename: str = Form(None)):
     await ensure_seed()
     doc = await get_doc(matter_id)
-    name = (file.filename if file else None) or filename or "Successor Trustee Instrument.pdf"
-    src = {"id": "src_succession", "name": name, "type": "Successor Acceptance & Resignation Instrument", "status": "PENDING_VERIFICATION", "uploaded": today(), "size": "1.4 MB", "new": True}
-    doc["sources"] = [s for s in doc["sources"] if s["id"] != "src_succession"] + [src]
-    doc["claims"] = succession_claims()
+    script = SCRIPTS.get(matter_id)
+    if not doc or not script:
+        raise HTTPException(404, "Matter not found or not interactive.")
+    sdef = script["source"]
+    name = (file.filename if file else None) or filename or sdef["default_name"]
+    src = {"id": sdef["id"], "name": name, "type": sdef["type"], "status": "PENDING_VERIFICATION", "uploaded": today(), "size": sdef["size"], "new": True}
+    doc["sources"] = [s for s in doc["sources"] if s["id"] != sdef["id"]] + [src]
+    doc["claims"] = script["claims"]()
     doc["flow"]["source_uploaded"] = True
     doc["flow"]["claims_verified"] = False
     await save_doc(doc)
@@ -403,10 +523,11 @@ async def verify_claims(matter_id: str = Query(HAR)):
     doc = await get_doc(matter_id)
     if not doc["flow"]["source_uploaded"]:
         raise HTTPException(400, "No source uploaded yet.")
+    src_id = SCRIPTS[matter_id]["source"]["id"]
     for c in doc["claims"]:
         c["status"] = "VERIFIED"
     for s in doc["sources"]:
-        if s["id"] == "src_succession":
+        if s["id"] == src_id:
             s["status"] = "VERIFIED"
     doc["flow"]["claims_verified"] = True
     await save_doc(doc)
@@ -419,14 +540,8 @@ async def create_changeset(matter_id: str = Query(HAR)):
     doc = await get_doc(matter_id)
     if not doc["flow"]["claims_verified"]:
         raise HTTPException(400, "Claims must be verified first.")
-    cs = {"id": "cs_succession", "title": "Successor Trustee Activation", "status": "PROPOSED", "created": today(), "authority": "Trust Agreement, Article VII §3.2",
-          "changes": [
-              {"id": "ch1", "type": "PERSON", "label": "Robert Harrington — trustee role", "before": "CURRENT", "after": "INACTIVE", "impact": "HIGH"},
-              {"id": "ch2", "type": "PERSON", "label": "Maya Harrington — trustee role", "before": "STANDBY", "after": "CURRENT", "impact": "HIGH"},
-              {"id": "ch3", "type": "STATE", "label": "Governed checkpoint", "before": "v2.0", "after": "v3.0", "impact": "MEDIUM"}],
-          "consequences": ["Establishes a new governed state (v3.0).", "Creates an obligation to notify affected beneficiaries.", "Prior state (v2.0) becomes SUPERSEDED — not overwritten."],
-          "open_items": 0}
-    doc["changesets"] = [c for c in doc["changesets"] if c["id"] != "cs_succession"] + [cs]
+    cs = {**SCRIPTS[matter_id]["changeset"], "status": "PROPOSED", "created": today(), "open_items": 0}
+    doc["changesets"] = [c for c in doc["changesets"] if c["id"] != cs["id"]] + [cs]
     doc["flow"]["changeset_created"] = True
     await save_doc(doc)
     return {"changeset": cs}
@@ -440,64 +555,17 @@ async def approve_changeset(matter_id: str = Query(HAR)):
         raise HTTPException(400, "ChangeSet must be created first.")
     if doc["flow"]["changeset_approved"]:
         return {"already": True}
+    script = SCRIPTS[matter_id]
     for s in doc["states"]:
         if s["status"] == "CURRENT":
             s["status"] = "SUPERSEDED"
-    v3 = {"version": "v3.0", "status": "CURRENT", "title": "Successor Trustee Activated", "trustee": "Maya Harrington", "trustee_status": "CURRENT",
-          "effective_time": "2026-06-01", "recorded_time": today(), "verified_time": today(), "released_time": today(),
-          "summary": "Successor-trustee condition satisfied and verified. Maya Harrington activated as current trustee; Robert Harrington moved to inactive.", "authority": "Trust Agreement, Article VII §3.2"}
-    doc["states"].append(v3)
-    for p in doc["people"]:
-        if p["id"] == "p_robert":
-            p["status"], p["role"] = "INACTIVE", "Former Trustee"
-        if p["id"] == "p_maya":
-            p["status"], p["role"] = "CURRENT", "Current Trustee"
     for c in doc["changesets"]:
-        if c["id"] == "cs_succession":
+        if c["id"] == script["changeset"]["id"]:
             c["status"] = "APPROVED"
-    event = {"id": "evt_succession", "kind": "CONSEQUENTIAL", "title": "Successor Trustee Activation", "date": today(), "state_version": "v3.0",
-             "summary": "Trustee succession represented as one consequential event linking source, verification, state transition, conduct, obligation, and beneficiary impact.", "icon": "refresh",
-             "trigger": "Successor-trustee condition satisfied.", "authority": "Trust Agreement, Article VII §3.2", "source": "Successor Acceptance & Resignation Instrument",
-             "verification": "James Morgan verified claims against source authority.",
-             "transition": {"from": "v2.0", "to": "v3.0", "changes": ["Robert Harrington: CURRENT → INACTIVE", "Maya Harrington: STANDBY → CURRENT"]},
-             "conduct": "Fiduciary officer reviewed and confirmed succession documentation.", "obligation": "ob_notice", "beneficiary_impact": "bi_sarah", "evidence": "ev_v3",
-             "effective_time": "2026-06-01", "recorded_time": today(), "verified_time": today(), "released_time": today()}
-    doc["events"].append(event)
-    doc["obligations"] = [o for o in doc["obligations"] if o["id"] != "ob_notice"] + [
-        {"id": "ob_notice", "title": "Notify affected beneficiaries of trustee succession", "owner": "James Morgan", "status": "OPEN", "due": "2026-06-08", "created_by": "evt_succession", "severity": "NEEDS_ATTENTION",
-         "detail": "Deliver formal notice of trustee change to affected beneficiaries and record completion evidence.", "lens": "fiduciary", "days_open": 3,
-         "history": [{"time": now_iso(), "actor": "System", "action": "Obligation created from Successor Trustee Activation."}]}]
-    doc["beneficiary_impacts"] = [b for b in doc["beneficiary_impacts"] if b["id"] != "bi_sarah"] + [
-        {"id": "bi_sarah", "matter_id": HAR, "person_id": "p_sarah", "transition_id": "v2.0->v3.0", "impact_status": "INFORMATIONAL",
-         "what_changed": "Maya Harrington is now serving as your trustee.", "what_did_not_change": "Your beneficiary status and distribution rights are unchanged.",
-         "what_it_means": "Day-to-day administration of the trust continues under a new trustee.", "action_required": "No action is required from you at this time."}]
-    doc["rac"] = [r for r in doc["rac"] if r.get("event") != "evt_succession"] + [
-        {"id": "rac_fid", "event": "evt_succession", "audience": "fiduciary", "title": "Fiduciary R.A.C. — Successor Trustee Activation", "generated": today(), "matter_id": HAR, "instrument_id": "ATL-HAR-00217-RAC-F-0003", "sections": [
-            {"h": "What we did", "b": "Verified the successor-trustee condition and released a new governed state activating Maya Harrington as trustee."},
-            {"h": "Under what authority", "b": "Trust Agreement, Article VII §3.2, supported by the Successor Acceptance & Resignation Instrument."},
-            {"h": "What evidence supports it", "b": "Source document verified by James Morgan; claims confirmed against the governing instrument."},
-            {"h": "What state resulted", "b": "Governed checkpoint advanced from v2.0 (superseded) to v3.0 (current)."},
-            {"h": "What remains to be done", "b": "One open obligation: notify affected beneficiaries by 2026-06-08."}]},
-        {"id": "rac_ben", "event": "evt_succession", "audience": "beneficiary", "title": "Your R.A.C. Statement — Trustee Change", "generated": today(), "matter_id": HAR, "instrument_id": "ATL-HAR-00217-RAC-B-0003", "sections": [
-            {"h": "What happened", "b": "The trust transitioned to its named successor trustee, Maya Harrington."},
-            {"h": "What changed for you", "b": "Your point of contact for trustee matters is now Maya Harrington."},
-            {"h": "What did not change", "b": "Your status as a beneficiary and your distribution rights remain the same."},
-            {"h": "What it means for you", "b": "The trust continues to be administered on your behalf, without interruption."},
-            {"h": "Do I need to do anything?", "b": "No action is required from you at this time."},
-            {"h": "Who should I contact?", "b": "You may reach out to your fiduciary team with any questions."}]},
-        {"id": "rac_ov", "event": "evt_succession", "audience": "oversight", "title": "Oversight R.A.C. — Successor Trustee Activation", "generated": today(), "matter_id": HAR, "instrument_id": "ATL-HAR-00217-RAC-O-0003", "sections": [
-            {"h": "Consequential conduct", "b": "Verified succession and released governed state v3.0 (officer: James Morgan)."},
-            {"h": "Exceptions", "b": "Beneficiary notification obligation currently OPEN; monitor against expected window."},
-            {"h": "Obligations remaining", "b": "1 open — notify affected beneficiaries (due 2026-06-08)."},
-            {"h": "Evidence / confirmations", "b": "Source-linked instrument verified; state transition provenance recorded."},
-            {"h": "Supervisory attention", "b": "Attention warranted only if notice remains open beyond the expected window."},
-            {"h": "Next action owner", "b": "James Morgan (fiduciary officer)."}]},
-    ]
-    doc["evidence_instruments"] = [e for e in doc["evidence_instruments"] if e["id"] != "ev_v3"] + [
-        {"id": "ev_v3", "matter_id": HAR, "instrument_id": "ATL-HAR-00217-EV-0003", "title": "Successor Trustee Activation — Governed Transition", "state_version": "v3.0", "lifecycle": "RELEASED", "checkpoint_time": today(), "hash": "E7A3-9B2C-4F6D-A18B", "verification_class": "Human-verified · Source-linked", "prev_state": "v2.0", "successor_state": "—", "transition_type": "Successor trustee activation", "sources": ["Successor Acceptance & Resignation Instrument", "Trust Agreement.pdf"]}]
+    new_state, event = script["apply"](doc)
     doc["flow"]["changeset_approved"] = True
     await save_doc(doc)
-    return {"state": v3, "event": event}
+    return {"state": new_state, "event": event}
 
 
 @api.post("/obligations/{ob_id}/action")

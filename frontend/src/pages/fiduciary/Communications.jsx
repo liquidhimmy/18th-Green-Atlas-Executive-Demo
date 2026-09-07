@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Send, Mail, Paperclip, CheckCircle2, Loader2, FileText, Download, Inbox } from "lucide-react";
@@ -16,23 +16,25 @@ export default function Communications() {
   const [busy, setBusy] = useState(false);
   const [subject, setSubject] = useState("");
   const [body, setBody] = useState("");
-  const [init, setInit] = useState(false);
-  if (!matter) return <LensLayout lens="fiduciary"><Loader /></LensLayout>;
-
-  const ob = featuredObligation(matter);
-  const evt = featuredEvent(matter);
-  const ben = primaryBeneficiary(matter);
-  const open = ob && ob.status !== "SATISFIED";
-  const ctype = matter.matter_id === "ATL-HAR-00217" ? "Beneficiary Notice" : "Distribution Explanation";
-
-  const defSubject = matter.matter_id === "ATL-HAR-00217"
-    ? "Notice of Trustee Succession — Harrington Family Estate"
+  const init = useRef(false);
+  const ready = !!matter;
+  const ob = ready ? featuredObligation(matter) : null;
+  const evt = ready ? featuredEvent(matter) : null;
+  const ben = ready ? primaryBeneficiary(matter) : null;
+  const ctype = matter?.matter_id === "ATL-HAR-00217" ? "Beneficiary Notice" : "Distribution Explanation";
+  const defSubject = !ready ? "" : matter.matter_id === "ATL-HAR-00217"
+    ? `Notice of Trustee Succession — ${matter.name}`
     : `Explanation of Discretionary Distribution — ${matter.name}`;
-  const defBody = evt
+  const defBody = !ready ? "" : evt
     ? `Dear ${ben.name},\n\nWe are writing to inform you of a governed change on your trust relationship: ${evt.title}. ${evt.transition ? evt.transition.changes.join(" ") + "." : ""}\n\nWhat this means for you: ${(matter.beneficiary_impacts[0] || {}).what_it_means || "Please review your relationship home for details."}\n\nAction required: ${(matter.beneficiary_impacts[0] || {}).action_required || "None."}\n\nThis notice is issued under ${evt.authority}. A source-linked R.A.C. statement is available for your records.\n\nSincerely,\n${matter.officer}, Fiduciary Officer`
     : `Dear ${ben.name},\n\nThis is a communication regarding your trust relationship.\n\nSincerely,\n${matter.officer}`;
 
-  if (!init) { setSubject(defSubject); setBody(defBody); setInit(true); }
+  useEffect(() => {
+    if (ready && !init.current) { setSubject(defSubject); setBody(defBody); init.current = true; }
+  }, [ready, defSubject, defBody]);
+
+  if (!matter) return <LensLayout lens="fiduciary"><Loader /></LensLayout>;
+  const open = ob && ob.status !== "SATISFIED";
 
   const send = async () => {
     setBusy(true);

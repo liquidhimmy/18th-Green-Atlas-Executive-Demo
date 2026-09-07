@@ -102,8 +102,8 @@ export default function FiduciaryDashboard() {
             <GitBranch size={22} />
           </span>
           <div className="flex-1">
-            <div className="font-display text-[17px]">A new source has arrived for this Matter</div>
-            <div className="text-[13px] muted-text">Successor-trustee condition may be satisfied. Move through the governed change workflow: upload → extract → verify → ChangeSet → establish state.</div>
+            <div className="font-display text-[17px]">{matter.pending_source?.headline || "A new source has arrived for this Matter"}</div>
+            <div className="text-[13px] muted-text">{matter.pending_source?.description}</div>
           </div>
           <Btn onClick={() => navigate("/fiduciary/change")} data-testid="start-governed-change">Begin Governed Change <ArrowRight size={16} /></Btn>
         </motion.div>

@@ -8,10 +8,10 @@ export const api = {
   listMatters: () => client.get("/matters").then((r) => r.data),
   getMatter: (mid) => client.get("/matter", q(mid)).then((r) => r.data),
   getPortfolio: () => client.get("/portfolio").then((r) => r.data),
-  uploadSource: (mid, file) => {
+  uploadSource: (mid, file, fallbackName) => {
     const fd = new FormData();
     if (file) fd.append("file", file);
-    else fd.append("filename", "Successor Acceptance & Resignation Instrument.pdf");
+    else if (fallbackName) fd.append("filename", fallbackName);
     return client.post("/upload-source", fd, q(mid)).then((r) => r.data);
   },
   verifyClaims: (mid) => client.post("/verify-claims", {}, q(mid)).then((r) => r.data),

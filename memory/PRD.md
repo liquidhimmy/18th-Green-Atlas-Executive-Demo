@@ -25,12 +25,17 @@ Build a functional reference demo of "18th Green Atlas", a Fiduciary Relationshi
 - Consequential Event links source→verification→transition→conduct→obligation→beneficiary impact→evidence. Temporal semantics (effective/recorded/verified/released) preserved.
 
 ## Backend API
-GET /api/matter, /api/portfolio, /api/health; POST /api/upload-source, /api/verify-claims, /api/create-changeset, /api/approve-changeset, /api/obligations/{id}/action, /api/margaret, /api/elicited-context, /api/reset.
+GET /api/matter?matter_id=, /api/matters, /api/portfolio, /api/health; POST /api/upload-source, /api/verify-claims, /api/create-changeset, /api/approve-changeset, /api/obligations/{id}/action, /api/communications/send, /api/margaret, /api/elicited-context, /api/reset (all mutation endpoints take ?matter_id=, default Harrington). Per-matter scripted golden paths live in `SCRIPTS` (server.py).
 
-## Backlog / Next (P1/P2)
-- P1: Multi-Matter switcher (other portfolio trusts are summaries only; make one more Matter navigable).
-- P1: Communication hub (send/preview beneficiary notice as its own screen).
-- P2: Timeline checkpoint scrubber (view Matter as of any prior state).
-- P2: Portfolio/Institutional intelligence panels (derived insights).
-- P2: Downloadable Evidence Instrument / R.A.C. PDF export (currently on-screen only).
-- Notes: MARGARET & claim extraction are MOCKED (scripted). Other portfolio matters besides Harrington are non-interactive summaries.
+## Implemented (2026-06 / iteration 2–3 — tested 100%, 24/24 backend)
+- Second Matter: Morgan Family Trust (ATL-MOR-00456) fully navigable across all three lenses with its OWN scripted golden path: starts v4.0 → upload Distribution Request → 4 claims → verify → ChangeSet "Discretionary Distribution Approval" → v5.0 + Consequential Event + OPEN EXCEPTION obligation + ACTION_REQUIRED beneficiary impact (Daniel) + 3 R.A.C. + Evidence Instrument; cash asset 720k→470k. Matter switcher in top bar; Portfolio attention queue links to navigable matters.
+- Communication Hub (/fiduciary/communications): preview/edit letter, SIMULATED send → obligation SATISFIED, new governed state, communication log, letter recorded as Evidence Instrument, download letter PDF.
+- Timeline Checkpoint Scrubber (Matter Timeline → Checkpoint Scrubber): rail + range slider; snapshot of governed state, events and obligations as of any prior checkpoint.
+- Evidence Export: R.A.C. statements and Evidence Instruments export to audit-styled print-to-PDF (browser Save as PDF).
+- Env recovery: backend/.env (MONGO_URL, DB_NAME, CORS_ORIGINS) and frontend/.env (REACT_APP_BACKEND_URL) recreated; pydantic_core pinned to 2.16.3.
+
+## Backlog / Next (P2)
+- Portfolio/Institutional intelligence panels (derived insights across matters).
+- Make Carter/Davis/Bellamy/Winslow navigable (currently non-interactive summaries).
+- Server-side PDF generation (current export is print-to-PDF).
+- Notes: MARGARET & claim extraction are MOCKED (scripted). Communication send is SIMULATED.

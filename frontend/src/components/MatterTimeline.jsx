@@ -9,8 +9,9 @@ import { StatusChip, ClassTag } from "./ui";
 const ICONS = { landmark: Landmark, "file-text": FileText, refresh: RefreshCw, check: CheckCircle2 };
 
 export default function MatterTimeline({ matter, accent = "#19C37D", compact = false }) {
-  const [open, setOpen] = useState("evt_succession");
   const events = [...(matter?.events || [])].sort((a, b) => (a.date > b.date ? 1 : -1));
+  const lastConseq = [...events].reverse().find((e) => e.kind === "CONSEQUENTIAL");
+  const [open, setOpen] = useState(lastConseq?.id || null);
 
   return (
     <div className="relative pl-2">

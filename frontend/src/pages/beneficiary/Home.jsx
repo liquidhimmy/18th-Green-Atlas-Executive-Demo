@@ -94,7 +94,7 @@ export default function BeneficiaryHome() {
             </div>
           </div>
           <div className="mt-4 grid grid-cols-2 gap-2">
-            {["What does this trustee change mean for me?", "Do I need to do anything?"].map((q) => (
+            {["What does this change mean for me?", "Do I need to do anything?"].map((q) => (
               <div key={q} className="rounded-xl px-4 py-3 text-[13px] cursor-default" style={{ background: "#F6F7F9", border: "1px solid #EDE7FF" }}>“{q}”</div>
             ))}
           </div>

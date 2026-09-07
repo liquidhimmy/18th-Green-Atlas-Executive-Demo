@@ -24,7 +24,7 @@ export default function FiduciaryRAC() {
 
       <SectionTitle icon={ShieldCheck} title="Fiduciary R.A.C." sub="What did we do, under what authority, and what remains outstanding" />
       {fidRac ? <RACStatement rac={fidRac} accent="#19C37D" /> : (
-        <Card className="p-8 text-center muted-text text-[13px]">No R.A.C. yet. Complete the Governed Change workflow to generate the Successor Trustee Activation R.A.C.</Card>
+        <Card className="p-8 text-center muted-text text-[13px]">No R.A.C. yet. Complete the Governed Change workflow to generate this Matter's R.A.C. statements.</Card>
       )}
 
       <div className="mt-8">
@@ -38,7 +38,7 @@ export default function FiduciaryRAC() {
             </button>
           ))}
         </div>
-        <EvidenceInstrument instrument={selectedEv} accent="#19C37D" />
+        <EvidenceInstrument instrument={selectedEv} accent="#19C37D" matterName={matter.name} />
       </div>
     </LensLayout>
   );

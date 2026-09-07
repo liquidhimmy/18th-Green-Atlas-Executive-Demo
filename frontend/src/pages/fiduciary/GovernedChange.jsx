@@ -9,6 +9,7 @@ import LensLayout from "../../components/LensLayout";
 import { Card, StatusChip, Btn, ClassTag } from "../../components/ui";
 import { Loader } from "./Dashboard";
 import { useMatter } from "../../App";
+import { currentState, priorState, featuredEvent, featuredObligation } from "../../helpers";
 import api from "../../api";
 
 const STEPS = [
@@ -60,7 +61,7 @@ export default function GovernedChange() {
   };
 
   return (
-    <LensLayout lens="fiduciary" crumbs={["Matters", "Harrington Family Estate", "Governed Change"]}>
+    <LensLayout lens="fiduciary" crumbs={["Matters", matter.name, "Governed Change"]}>
       <div className="mb-6">
         <h1 className="font-display text-[28px]">Governed Change Workflow</h1>
         <div className="text-[13px] muted-text mt-1">An AI observation is not a governed fact. Consequential history is never silently overwritten.</div>
@@ -96,7 +97,7 @@ export default function GovernedChange() {
 
       <AnimatePresence mode="wait">
         <motion.div key={step} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.3 }}>
-          {step === 0 && <UploadStep busy={busy} onUpload={(file) => run(() => api.uploadSource(matterId, file), 1)} />}
+          {step === 0 && <UploadStep busy={busy} pending={matter.pending_source} onUpload={(file) => run(() => api.uploadSource(matterId, file, matter.pending_source?.name), 1)} />}
           {step === 1 && <ExtractStep matter={matter} busy={busy} onVerify={() => run(() => api.verifyClaims(matterId), 2)} />}
           {step === 2 && <ChangeSetStep matter={matter} busy={busy}
             onCreate={() => run(() => api.createChangeset(matterId))}
@@ -109,7 +110,7 @@ export default function GovernedChange() {
 }
 
 /* ---------- Step 1: Upload ---------- */
-function UploadStep({ onUpload, busy }) {
+function UploadStep({ onUpload, busy, pending }) {
   const [file, setFile] = useState(null);
   return (
     <Card className="p-8 max-w-[820px]">
@@ -121,7 +122,7 @@ function UploadStep({ onUpload, busy }) {
         <input type="file" className="hidden" data-testid="source-file-input" onChange={(e) => setFile(e.target.files[0])} />
         <UploadCloud size={40} style={{ color: "#19C37D" }} className="mx-auto mb-3" />
         <div className="font-display text-[18px]">{file ? file.name : "Drag & drop the new governing source"}</div>
-        <div className="text-[12.5px] muted-text mt-1.5">Successor Acceptance & Resignation Instrument · PDF, DOCX, JPG, PNG</div>
+        <div className="text-[12.5px] muted-text mt-1.5">{pending?.type || "Governing source"} · PDF, DOCX, JPG, PNG</div>
       </label>
       <div className="flex items-center justify-between mt-6">
         <button onClick={() => onUpload(null)} className="text-[12.5px] muted-text link-underline" data-testid="use-demo-source">
@@ -201,7 +202,7 @@ function ExtractStep({ matter, onVerify, busy }) {
 
 /* ---------- Step 3: ChangeSet ---------- */
 function ChangeSetStep({ matter, onCreate, onApprove, busy }) {
-  const cs = matter.changesets.find((c) => c.id === "cs_succession");
+  const cs = matter.changesets[matter.changesets.length - 1];
   const impactColor = { HIGH: "#EF4444", MEDIUM: "#F59E0B", LOW: "#3B82F6" };
   if (!cs) {
     return (
@@ -264,9 +265,11 @@ function ChangeSetStep({ matter, onCreate, onApprove, busy }) {
 
 /* ---------- Step 4: Establish ---------- */
 function EstablishStep({ matter, navigate }) {
-  const states = matter.states;
-  const before = states.find((s) => s.status === "SUPERSEDED" && s.version === "v2.0");
-  const after = states.find((s) => s.status === "CURRENT");
+  const before = priorState(matter);
+  const after = currentState(matter);
+  const evt = featuredEvent(matter);
+  const ob = featuredObligation(matter);
+  const bi = matter.beneficiary_impacts.find((b) => b.id === evt?.beneficiary_impact) || matter.beneficiary_impacts[0];
   return (
     <div>
       <div className="grid grid-cols-2 gap-5 mb-6">
@@ -290,14 +293,14 @@ function EstablishStep({ matter, navigate }) {
         <div className="flex items-center gap-3 mb-4">
           <span className="grid place-items-center rounded-xl" style={{ width: 44, height: 44, background: "rgba(25,195,125,0.14)" }}><CheckCircle2 size={22} style={{ color: "#19C37D" }} /></span>
           <div>
-            <div className="font-display text-[19px]">Governed state established (v3.0)</div>
+            <div className="font-display text-[19px]" data-testid="established-state-title">Governed state established ({after.version})</div>
             <div className="text-[13px] muted-text">Atlas linked this into one Consequential Event and created downstream responsibilities.</div>
           </div>
         </div>
         <div className="grid grid-cols-3 gap-3">
-          <ResultCard icon={GitBranch} title="Consequential Event" sub="Successor Trustee Activation" onClick={() => navigate("/fiduciary/timeline")} cta="View timeline" />
-          <ResultCard icon={ClipboardList} title="Obligation created" sub="Notify affected beneficiaries · OPEN" onClick={() => navigate("/fiduciary/obligations")} cta="View obligation" />
-          <ResultCard icon={Users} title="Beneficiary impact" sub="Informational · No action required" onClick={() => navigate("/beneficiary")} cta="Beneficiary lens" />
+          <ResultCard icon={GitBranch} title="Consequential Event" sub={evt?.title || "—"} onClick={() => navigate("/fiduciary/timeline")} cta="View timeline" />
+          <ResultCard icon={ClipboardList} title="Obligation created" sub={ob ? `${ob.title} · ${ob.status}` : "—"} onClick={() => navigate("/fiduciary/obligations")} cta="View obligation" />
+          <ResultCard icon={Users} title="Beneficiary impact" sub={bi ? `${bi.impact_status.replace("_", " ")} · ${bi.action_required}` : "—"} onClick={() => navigate("/beneficiary")} cta="Beneficiary lens" />
         </div>
       </Card>
     </div>

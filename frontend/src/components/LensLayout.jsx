@@ -60,7 +60,7 @@ export default function LensLayout({ lens, children, subtitle, crumbs = [] }) {
               const active = location.pathname === n.to;
               const Icon = n.icon;
               return (
-                <button key={n.to} data-testid={`nav-${n.label.toLowerCase().replace(/[^a-z]/g, "-")}`}
+                <button key={n.to} data-testid={`nav-${n.label.toLowerCase().replace(/[^a-z]+/g, "-").replace(/^-|-$/g, "")}`}
                   onClick={() => navigate(n.to)}
                   className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13.5px] transition-all duration-200 text-left"
                   style={{

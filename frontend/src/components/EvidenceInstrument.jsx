@@ -3,7 +3,7 @@ import { QrCode, FileText, ShieldCheck, Download, CheckCircle2 } from "lucide-re
 import { StatusChip } from "./ui";
 import { exportPdf } from "../pdf";
 
-export default function EvidenceInstrument({ instrument, accent = "#19C37D" }) {
+export default function EvidenceInstrument({ instrument, accent = "#19C37D", matterName }) {
   if (!instrument) return null;
   const meta = [
     ["Matter ID", instrument.matter_id],
@@ -19,7 +19,7 @@ export default function EvidenceInstrument({ instrument, accent = "#19C37D" }) {
   ];
   const download = () => exportPdf({
     title: instrument.title, subtitle: `Evidence Instrument · ${instrument.state_version}`,
-    instrumentId: instrument.instrument_id, matterName: instrument.matter_id,
+    instrumentId: instrument.instrument_id, matterName: matterName || instrument.matter_id,
     sections: [
       { h: "Transition type", b: instrument.transition_type },
       { h: "Verification class", b: instrument.verification_class },
@@ -41,7 +41,7 @@ export default function EvidenceInstrument({ instrument, accent = "#19C37D" }) {
             </span>
           </div>
           <div className="font-display text-[22px] mt-3">{instrument.title}</div>
-          <div className="text-[12.5px] mt-1" style={{ color: "#465468" }}>Harrington Family Estate · {instrument.matter_id}</div>
+          <div className="text-[12.5px] mt-1" style={{ color: "#465468" }}>{matterName || "Matter"} · {instrument.matter_id}</div>
         </div>
         <div className="px-6 py-5 space-y-2.5">
           {["Document summary", "Authority verified", "Participants confirmed", "Checkpoint history", "Source-linked provenance"].map((t) => (
