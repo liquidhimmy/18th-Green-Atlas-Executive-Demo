@@ -1,6 +1,7 @@
 import React from "react";
 import { QrCode, FileText, ShieldCheck, Download, CheckCircle2 } from "lucide-react";
 import { StatusChip } from "./ui";
+import { exportPdf } from "../pdf";
 
 export default function EvidenceInstrument({ instrument, accent = "#19C37D" }) {
   if (!instrument) return null;
@@ -16,6 +17,16 @@ export default function EvidenceInstrument({ instrument, accent = "#19C37D" }) {
     ["Verification class", instrument.verification_class],
     ["Integrity hash", instrument.hash],
   ];
+  const download = () => exportPdf({
+    title: instrument.title, subtitle: `Evidence Instrument · ${instrument.state_version}`,
+    instrumentId: instrument.instrument_id, matterName: instrument.matter_id,
+    sections: [
+      { h: "Transition type", b: instrument.transition_type },
+      { h: "Verification class", b: instrument.verification_class },
+      { h: "Source authority", b: (instrument.sources || []).join(", ") },
+    ],
+    meta, disclaimer: "This reference demo illustrates the intended architecture. Production cryptographic verification, institutional security controls, and regulatory requirements would be implemented and validated in the production system.",
+  });
   return (
     <div className="grid grid-cols-2 gap-5">
       {/* Human layer */}
@@ -64,8 +75,8 @@ export default function EvidenceInstrument({ instrument, accent = "#19C37D" }) {
         <div className="mt-4 flex items-center gap-2 text-[11px] p-3 rounded-lg" style={{ background: "rgba(245,158,11,0.08)", border: "1px solid rgba(245,158,11,0.25)", color: "#F59E0B" }}>
           <ShieldCheck size={14} /> Verification architecture placeholder — production cryptographic verification & institutional security controls pending.
         </div>
-        <button className="mt-4 inline-flex items-center gap-2 text-[13px] font-semibold" style={{ color: accent }} data-testid="evidence-export-btn">
-          <Download size={15} /> Export portable instrument
+        <button onClick={download} className="mt-4 inline-flex items-center gap-2 text-[13px] font-semibold" style={{ color: accent }} data-testid="evidence-export-btn">
+          <Download size={15} /> Export portable instrument (PDF)
         </button>
       </div>
     </div>

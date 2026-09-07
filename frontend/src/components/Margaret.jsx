@@ -13,7 +13,7 @@ const SUGGESTED = {
 
 export default function Margaret({ lens, onClose }) {
   const L = LENSES[lens];
-  const { refresh } = useMatter();
+  const { refresh, matterId, matter } = useMatter();
   const [msgs, setMsgs] = useState([
     { role: "margaret", text: "I make governed information understandable — and ask useful questions where the record alone cannot tell us enough. I do not establish governed truth.", intro: true },
   ]);
@@ -32,7 +32,7 @@ export default function Margaret({ lens, onClose }) {
     setBusy(true);
     if (elicit) {
       // treat as elicitation answer -> elicited context
-      await api.elicitedContext({ person: lens === "beneficiary" ? "Sarah Harrington" : "User", text: q });
+      await api.elicitedContext(matterId, { person: lens === "beneficiary" ? (matter?.people?.find((p) => p.lens_role === "beneficiary")?.name || "Beneficiary") : "User", text: q });
       await refresh();
       setMsgs((m) => [...m, {
         role: "margaret", elicited: true,
@@ -42,7 +42,7 @@ export default function Margaret({ lens, onClose }) {
       setBusy(false);
       return;
     }
-    const r = await api.askMargaret({ audience: lens, prompt: q });
+    const r = await api.askMargaret({ audience: lens, prompt: q, matter_id: matterId });
     setMsgs((m) => [...m, { role: "margaret", text: r.text, sources: r.sources, elicit: r.elicit }]);
     if (r.elicit) setElicit(r.elicit);
     setBusy(false);

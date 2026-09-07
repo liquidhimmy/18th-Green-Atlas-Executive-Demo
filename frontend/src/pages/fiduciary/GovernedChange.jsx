@@ -26,7 +26,7 @@ function stepFromFlow(f) {
 }
 
 export default function GovernedChange() {
-  const { matter, refresh } = useMatter();
+  const { matter, refresh, matterId } = useMatter();
   const navigate = useNavigate();
   const [step, setStep] = useState(0);
   const [busy, setBusy] = useState(false);
@@ -34,6 +34,22 @@ export default function GovernedChange() {
   useEffect(() => { if (matter) setStep(stepFromFlow(matter.flow)); }, [matter]);
   if (!matter) return <LensLayout lens="fiduciary"><Loader /></LensLayout>;
   const flow = matter.flow;
+
+  if (!matter.interactive) {
+    return (
+      <LensLayout lens="fiduciary" crumbs={["Matters", matter.name, "Governed Change"]}>
+        <Card className="p-10 text-center max-w-[680px] mx-auto">
+          <Landmark size={40} style={{ color: "#19C37D" }} className="mx-auto mb-3" />
+          <div className="font-display text-[22px]">No pending governed change</div>
+          <div className="text-[13.5px] muted-text mt-2">{matter.name} has no source awaiting review. Its most recent consequential change is already governed at the current checkpoint. Explore its history in the Matter Timeline.</div>
+          <div className="flex items-center justify-center gap-3 mt-6">
+            <Btn variant="outline" onClick={() => navigate("/fiduciary/timeline")}>Open Matter Timeline <ArrowRight size={15} /></Btn>
+            <Btn onClick={() => navigate("/fiduciary/obligations")}>View Obligations</Btn>
+          </div>
+        </Card>
+      </LensLayout>
+    );
+  }
 
   const run = async (fn, next) => {
     setBusy(true);
@@ -80,11 +96,11 @@ export default function GovernedChange() {
 
       <AnimatePresence mode="wait">
         <motion.div key={step} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.3 }}>
-          {step === 0 && <UploadStep busy={busy} onUpload={(file) => run(() => api.uploadSource(file), 1)} />}
-          {step === 1 && <ExtractStep matter={matter} busy={busy} onVerify={() => run(() => api.verifyClaims(), 2)} />}
+          {step === 0 && <UploadStep busy={busy} onUpload={(file) => run(() => api.uploadSource(matterId, file), 1)} />}
+          {step === 1 && <ExtractStep matter={matter} busy={busy} onVerify={() => run(() => api.verifyClaims(matterId), 2)} />}
           {step === 2 && <ChangeSetStep matter={matter} busy={busy}
-            onCreate={() => run(() => api.createChangeset())}
-            onApprove={() => run(() => api.approveChangeset(), 3)} />}
+            onCreate={() => run(() => api.createChangeset(matterId))}
+            onApprove={() => run(() => api.approveChangeset(matterId), 3)} />}
           {step === 3 && <EstablishStep matter={matter} navigate={navigate} />}
         </motion.div>
       </AnimatePresence>

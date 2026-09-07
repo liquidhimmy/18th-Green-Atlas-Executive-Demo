@@ -12,7 +12,7 @@ import { statusColor } from "../../theme";
 const GOLD = "#C69214";
 
 export default function OversightPortfolio() {
-  const { portfolio, matter } = useMatter();
+  const { portfolio, matter, switchMatter } = useMatter();
   const navigate = useNavigate();
   if (!portfolio || !matter) return <LensLayout lens="oversight"><div className="py-40 text-center muted-text">Loading…</div></LensLayout>;
   const s = portfolio.summary;
@@ -65,23 +65,24 @@ export default function OversightPortfolio() {
           {portfolio.attention.length === 0 && <div className="px-5 py-6 text-[13px] muted-text">No exceptions in the queue.</div>}
           {portfolio.attention.map((m, i) => {
             const c = statusColor(m.health);
-            const isHar = m.id === matter.matter_id;
+            const nav = m.navigable;
+            const open = () => { if (nav) { switchMatter(m.id); navigate("/oversight/matter"); } };
             return (
               <motion.button key={m.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.05 }}
-                onClick={() => isHar && navigate("/oversight/matter")} data-testid={`attention-${m.id}`}
+                onClick={open} data-testid={`attention-${m.id}`}
                 className="w-full text-left grid grid-cols-[auto_1fr_auto_auto] items-center gap-4 px-5 py-4 border-b hair last:border-0 hover:bg-white/[0.02] transition-colors"
-                style={isHar ? { background: "rgba(198,146,20,0.06)" } : {}}>
+                style={nav ? { background: "rgba(198,146,20,0.05)" } : {}}>
                 <AlertTriangle size={18} style={{ color: c }} />
                 <div>
                   <div className="flex items-center gap-2.5">
                     <span className="text-[14px] font-medium">{m.name}</span>
-                    {isHar && <span className="chip text-[10px]" style={{ color: GOLD, background: `${GOLD}18` }}>This Matter</span>}
+                    {nav && <span className="chip text-[10px]" style={{ color: GOLD, background: `${GOLD}18` }}>Navigable</span>}
                     <StatusChip status={m.health} />
                   </div>
                   <div className="text-[12px] muted-text mt-0.5">{m.reason} · Officer: {m.officer}</div>
                 </div>
                 <span className="text-[12.5px]" style={{ color: c }}>{m.days_flag} days open</span>
-                {isHar ? <ArrowRight size={16} style={{ color: GOLD }} /> : <span className="w-4" />}
+                {nav ? <ArrowRight size={16} style={{ color: GOLD }} /> : <span className="w-4" />}
               </motion.button>
             );
           })}

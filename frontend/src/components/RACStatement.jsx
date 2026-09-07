@@ -1,8 +1,15 @@
 import React from "react";
-import { ShieldCheck, FileText } from "lucide-react";
+import { ShieldCheck, FileText, Download } from "lucide-react";
+import { exportPdf } from "../pdf";
 
 export default function RACStatement({ rac, accent = "#19C37D", light = false }) {
   if (!rac) return null;
+  const download = () => exportPdf({
+    title: rac.title, subtitle: `R.A.C. Statement · ${rac.audience || ""}`.trim(),
+    instrumentId: rac.instrument_id, matterName: rac.matter_id,
+    sections: rac.sections,
+    disclaimer: "R.A.C. is a projection of governed history for an authorized audience. It explains conduct — it does not adjudicate whether conduct was lawful, prudent, or compliant.",
+  });
   return (
     <div className="rounded-2xl overflow-hidden" style={light
       ? { background: "#fff", border: "1px solid #D8DDE6", color: "#14202b" }
@@ -12,7 +19,12 @@ export default function RACStatement({ rac, accent = "#19C37D", light = false })
           <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.16em]" style={{ color: accent }}>
             <ShieldCheck size={14} /> R.A.C. Statement
           </div>
-          <span className="font-mono text-[11px]" style={{ color: light ? "#465468" : "#8FA6A0" }}>{rac.instrument_id}</span>
+          <div className="flex items-center gap-3">
+            <button onClick={download} data-testid="rac-export-btn" className="inline-flex items-center gap-1.5 text-[12px] font-semibold" style={{ color: accent }}>
+              <Download size={13} /> PDF
+            </button>
+            <span className="font-mono text-[11px]" style={{ color: light ? "#465468" : "#8FA6A0" }}>{rac.instrument_id}</span>
+          </div>
         </div>
         <div className="font-display text-[21px] mt-3">{rac.title}</div>
         <div className="text-[12px] mt-1" style={{ color: light ? "#465468" : "#8FA6A0" }}>

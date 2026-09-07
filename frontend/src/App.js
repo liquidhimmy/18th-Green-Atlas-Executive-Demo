@@ -9,36 +9,44 @@ import GovernedChange from "./pages/fiduciary/GovernedChange";
 import Obligations from "./pages/fiduciary/Obligations";
 import FiduciaryRAC from "./pages/fiduciary/RAC";
 import TimelinePage from "./pages/fiduciary/TimelinePage";
+import Communications from "./pages/fiduciary/Communications";
 import BeneficiaryHome from "./pages/beneficiary/Home";
 import BeneficiaryRAC from "./pages/beneficiary/RAC";
 import OversightPortfolio from "./pages/oversight/Portfolio";
 import OversightMatter from "./pages/oversight/MatterOversight";
 
+const HAR = "ATL-HAR-00217";
 const MatterContext = createContext(null);
 export const useMatter = () => useContext(MatterContext);
 
 function Provider({ children }) {
+  const [matterId, setMatterId] = useState(HAR);
   const [matter, setMatter] = useState(null);
+  const [matters, setMatters] = useState([]);
   const [portfolio, setPortfolio] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const refresh = useCallback(async () => {
-    const [m, p] = await Promise.all([api.getMatter(), api.getPortfolio()]);
+  const refresh = useCallback(async (mid) => {
+    const id = mid || matterId;
+    const [m, p, list] = await Promise.all([api.getMatter(id), api.getPortfolio(), api.listMatters()]);
     setMatter(m);
     setPortfolio(p);
+    setMatters(list.matters);
     setLoading(false);
     return m;
-  }, []);
+  }, [matterId]);
 
-  useEffect(() => { refresh(); }, [refresh]);
+  useEffect(() => { refresh(matterId); /* eslint-disable-next-line */ }, [matterId]);
+
+  const switchMatter = useCallback((mid) => { setMatterId(mid); }, []);
 
   const resetDemo = useCallback(async () => {
     await api.reset();
-    return refresh();
-  }, [refresh]);
+    return refresh(matterId);
+  }, [refresh, matterId]);
 
   return (
-    <MatterContext.Provider value={{ matter, portfolio, loading, refresh, resetDemo }}>
+    <MatterContext.Provider value={{ matter, matters, matterId, switchMatter, portfolio, loading, refresh, resetDemo }}>
       {children}
     </MatterContext.Provider>
   );
@@ -54,6 +62,7 @@ export default function App() {
           <Route path="/fiduciary/matter" element={<MatterOverview />} />
           <Route path="/fiduciary/change" element={<GovernedChange />} />
           <Route path="/fiduciary/obligations" element={<Obligations />} />
+          <Route path="/fiduciary/communications" element={<Communications />} />
           <Route path="/fiduciary/timeline" element={<TimelinePage />} />
           <Route path="/fiduciary/rac" element={<FiduciaryRAC />} />
           <Route path="/beneficiary" element={<BeneficiaryHome />} />

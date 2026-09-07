@@ -22,7 +22,7 @@ export default function MatterOverview() {
   const totalAssets = matter.assets.reduce((s, a) => s + a.value, 0);
 
   return (
-    <LensLayout lens="fiduciary" crumbs={["Matters", "Harrington Family Estate", "Overview"]}>
+    <LensLayout lens="fiduciary" crumbs={["Matters", matter.name, "Overview"]}>
       <div className="flex items-center justify-between mb-5">
         <div>
           <h1 className="font-display text-[28px]">Matter Overview</h1>

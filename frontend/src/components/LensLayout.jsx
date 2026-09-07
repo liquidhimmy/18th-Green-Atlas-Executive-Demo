@@ -3,12 +3,13 @@ import { useNavigate, useLocation, Link } from "react-router-dom";
 import {
   Home, FolderKanban, Users, Layers, ClipboardList, ShieldCheck, GitBranch,
   FileText, BarChart3, Bell, Search, Settings, LogOut, RotateCcw, Sparkles,
-  Compass, ChevronDown, Moon,
+  Compass, ChevronDown, Moon, Send, Check,
 } from "lucide-react";
 import { LENSES } from "../theme";
 import { Wordmark } from "./AtlasMark";
 import Margaret from "./Margaret";
 import { useMatter } from "../App";
+import { primaryBeneficiary } from "../helpers";
 
 const NAV = {
   fiduciary: [
@@ -17,6 +18,7 @@ const NAV = {
     { to: "/fiduciary/change", label: "Governed Change", icon: GitBranch, badge: "flow" },
     { to: "/fiduciary/timeline", label: "Matter Timeline", icon: BarChart3 },
     { to: "/fiduciary/obligations", label: "Obligations", icon: ClipboardList },
+    { to: "/fiduciary/communications", label: "Communications", icon: Send },
     { to: "/fiduciary/rac", label: "R.A.C. & Evidence", icon: ShieldCheck },
   ],
   oversight: [
@@ -35,9 +37,9 @@ export default function LensLayout({ lens, children, subtitle, crumbs = [] }) {
   const nav = NAV[lens] || [];
   const navigate = useNavigate();
   const location = useLocation();
-  const { resetDemo, matter } = useMatter();
+  const { resetDemo, matter, matters, matterId, switchMatter } = useMatter();
   const [margaretOpen, setMargaretOpen] = useState(false);
-  const [switcher, setSwitcher] = useState(false);
+  const [mSel, setMSel] = useState(false);
   const [resetting, setResetting] = useState(false);
 
   const doReset = async () => { setResetting(true); await resetDemo(); setResetting(false); };
@@ -105,10 +107,39 @@ export default function LensLayout({ lens, children, subtitle, crumbs = [] }) {
                 </React.Fragment>
               ))}
             </div>
-            <div className="flex-1 max-w-[420px] hidden lg:flex items-center gap-2 px-3 py-2 rounded-full border hair"
+
+            <div className="relative">
+              <button onClick={() => setMSel(!mSel)} data-testid="matter-selector"
+                className="flex items-center gap-2 px-3 py-2 rounded-full border hair text-[13px]"
+                style={{ background: dark ? "rgba(255,255,255,0.03)" : "#fff", color: L.accent }}>
+                <FolderKanban size={14} />
+                <span className="font-medium">{matter?.name || "Select Matter"}</span>
+                <ChevronDown size={14} className={mSel ? "rotate-180 transition-transform" : "transition-transform"} />
+              </button>
+              {mSel && (
+                <div className="absolute z-30 mt-2 w-[280px] rounded-2xl p-2 fadein"
+                  style={{ background: dark ? "#0a1618" : "#fff", border: `1px solid ${L.accent}33`, boxShadow: "0 20px 50px rgba(0,0,0,0.35)" }}>
+                  {matters.map((m) => (
+                    <button key={m.id} data-testid={`matter-option-${m.id}`}
+                      onClick={() => { switchMatter(m.id); setMSel(false); }}
+                      className="w-full text-left px-3 py-2.5 rounded-xl flex items-center gap-3 transition-colors hover:bg-white/[0.04]"
+                      style={m.id === matterId ? { background: L.soft } : {}}>
+                      <FolderKanban size={16} style={{ color: L.accent }} />
+                      <div className="flex-1">
+                        <div className="text-[13px] font-medium" style={{ color: dark ? "#EAF2EF" : "#14202b" }}>{m.name}</div>
+                        <div className="text-[11px] muted-text font-mono">{m.id} · {m.checkpoint}</div>
+                      </div>
+                      {m.id === matterId && <Check size={15} style={{ color: L.accent }} />}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div className="flex-1 max-w-[300px] hidden xl:flex items-center gap-2 px-3 py-2 rounded-full border hair"
               style={{ background: dark ? "rgba(255,255,255,0.03)" : "#fff" }}>
               <Search size={15} className="muted-text" />
-              <input placeholder="Search people, documents, or matters…"
+              <input placeholder="Search…"
                 className="bg-transparent outline-none text-[13px] w-full muted-text" />
               <kbd className="text-[10px] px-1.5 py-0.5 rounded border hair muted-text">⌘K</kbd>
             </div>
@@ -139,9 +170,11 @@ export default function LensLayout({ lens, children, subtitle, crumbs = [] }) {
 
 function UserBadge({ lens }) {
   const L = LENSES[lens];
+  const { matter } = useMatter();
+  const ben = primaryBeneficiary(matter);
   const person = {
-    fiduciary: { n: "James Morgan", r: "Fiduciary Officer", i: "JM" },
-    beneficiary: { n: "Sarah Harrington", r: "Beneficiary", i: "SH" },
+    fiduciary: { n: matter?.officer || "James Morgan", r: "Fiduciary Officer", i: "JM" },
+    beneficiary: { n: ben.name, r: "Beneficiary", i: ben.initials },
     oversight: { n: "Patricia Vance", r: "Oversight Supervisor", i: "PV" },
   }[lens];
   return (

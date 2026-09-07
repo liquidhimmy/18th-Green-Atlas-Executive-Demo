@@ -8,7 +8,8 @@ import {
 import LensLayout from "../../components/LensLayout";
 import { Card, StatusChip, Btn } from "../../components/ui";
 import { useMatter } from "../../App";
-import { ESTATE_IMG_2 } from "../../assets";
+import { primaryBeneficiary } from "../../helpers";
+import { ESTATE_IMG, ESTATE_IMG_2 } from "../../assets";
 
 function Loader() { return <div className="grid place-items-center py-40"><div className="font-display text-[18px] muted-text animate-pulse">Loading…</div></div>; }
 
@@ -17,20 +18,21 @@ export default function BeneficiaryHome() {
   const navigate = useNavigate();
   if (!matter) return <LensLayout lens="beneficiary"><Loader /></LensLayout>;
 
+  const ben = primaryBeneficiary(matter);
   const current = matter.states.find((s) => s.status === "CURRENT");
-  const impact = matter.beneficiary_impacts.find((b) => b.person_id === "p_sarah");
-  const changed = matter.flow.changeset_approved;
+  const impact = matter.beneficiary_impacts.find((b) => b.person_id === ben.id) || matter.beneficiary_impacts[0];
+  const changed = matter.beneficiary_impacts.length > 0;
 
   return (
-    <LensLayout lens="beneficiary" crumbs={["Harrington Family Estate", "My Relationship"]}>
+    <LensLayout lens="beneficiary" crumbs={[matter.name, "My Relationship"]}>
       {/* calm hero */}
       <div className="relative rounded-3xl overflow-hidden mb-6 rise" style={{ minHeight: 190 }}>
-        <div className="absolute inset-0" style={{ backgroundImage: `url(${ESTATE_IMG_2})`, backgroundSize: "cover", backgroundPosition: "center" }} />
+        <div className="absolute inset-0" style={{ backgroundImage: `url(${matter.image === "morgan" ? ESTATE_IMG : ESTATE_IMG_2})`, backgroundSize: "cover", backgroundPosition: "center" }} />
         <div className="absolute inset-0" style={{ background: "linear-gradient(90deg, rgba(255,255,255,0.96) 34%, rgba(255,255,255,0.7) 62%, rgba(255,255,255,0.3))" }} />
         <div className="relative px-8 py-8">
-          <h1 className="font-display text-[34px]">Welcome, Sarah</h1>
+          <h1 className="font-display text-[34px]">Welcome, {ben.name.split(" ")[0]}</h1>
           <p className="text-[15px] mt-2 max-w-[520px]" style={{ color: "#465468" }}>
-            Your trusted view into the Harrington Family Estate. Information, guidance, and support at every step.
+            Your trusted view into the {matter.name}. Information, guidance, and support at every step.
           </p>
           <div className="flex items-center gap-3 mt-4 text-[12.5px]" style={{ color: "#465468" }}>
             <StatusChip status="ACTIVE" /> <span className="font-mono">{matter.matter_id}</span>

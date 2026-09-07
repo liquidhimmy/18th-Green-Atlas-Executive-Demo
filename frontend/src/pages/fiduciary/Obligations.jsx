@@ -7,26 +7,27 @@ import LensLayout from "../../components/LensLayout";
 import { Card, SectionTitle, StatusChip, Btn } from "../../components/ui";
 import { Loader } from "./Dashboard";
 import { useMatter } from "../../App";
+import { featuredObligation } from "../../helpers";
 import api from "../../api";
 
 export default function Obligations() {
-  const { matter, refresh } = useMatter();
+  const { matter, refresh, matterId } = useMatter();
   const navigate = useNavigate();
   const [busy, setBusy] = useState(false);
   if (!matter) return <LensLayout lens="fiduciary"><Loader /></LensLayout>;
 
-  const notice = matter.obligations.find((o) => o.id === "ob_notice");
-  const others = matter.obligations.filter((o) => o.id !== "ob_notice");
+  const notice = featuredObligation(matter);
+  const others = matter.obligations.filter((o) => o.id !== notice?.id);
 
   const resolve = async () => {
     setBusy(true);
-    await api.obligationAction("ob_notice", { action: "resolve" });
+    await api.obligationAction(matterId, notice.id, { action: "resolve" });
     await refresh();
     setBusy(false);
   };
 
   return (
-    <LensLayout lens="fiduciary" crumbs={["Matters", "Harrington Family Estate", "Obligations"]}>
+    <LensLayout lens="fiduciary" crumbs={["Matters", matter.name, "Obligations"]}>
       <div className="mb-5">
         <h1 className="font-display text-[28px]">Obligations</h1>
         <div className="text-[13px] muted-text mt-1">Every obligation has ownership and lifecycle. Governed state creates operational responsibility.</div>
@@ -48,14 +49,17 @@ export default function Obligations() {
                 <div className="flex items-center gap-4 mt-2 text-[12px] muted-text">
                   <span><User size={12} className="inline mr-1" />{notice.owner}</span>
                   <span><Clock size={12} className="inline mr-1" />Due {notice.due}</span>
-                  <span>Created by Successor Trustee Activation</span>
+                  <span>Created by consequential event</span>
                 </div>
               </div>
             </div>
             {notice.status !== "SATISFIED" ? (
-              <Btn onClick={resolve} disabled={busy} data-testid="resolve-obligation-btn">
-                {busy ? <Loader2 size={16} className="animate-spin" /> : <Send size={15} />} Send Notice & Resolve
-              </Btn>
+              <div className="flex flex-col gap-2 items-end">
+                <Btn onClick={resolve} disabled={busy} data-testid="resolve-obligation-btn">
+                  {busy ? <Loader2 size={16} className="animate-spin" /> : <Send size={15} />} Send & Resolve
+                </Btn>
+                <button onClick={() => navigate("/fiduciary/communications")} className="text-[11.5px] link-underline" style={{ color: "#19C37D" }} data-testid="open-comms-from-ob">Open Communication Hub →</button>
+              </div>
             ) : (
               <span className="chip" style={{ color: "#10B981", background: "rgba(16,185,129,0.12)", border: "1px solid rgba(16,185,129,0.3)" }}>
                 <Paperclip size={12} /> Completion evidence attached
@@ -97,7 +101,7 @@ export default function Obligations() {
           <SectionTitle icon={Users} title="Beneficiary impact" sub="Structured — never improvised" />
           {matter.beneficiary_impacts.map((b) => (
             <Card key={b.id} className="p-5">
-              <div className="flex items-center gap-2 mb-3"><StatusChip status={b.impact_status} /><span className="text-[13px] muted-text">Sarah Harrington · Primary Beneficiary</span></div>
+              <div className="flex items-center gap-2 mb-3"><StatusChip status={b.impact_status} /><span className="text-[13px] muted-text">{(matter.people.find((p) => p.id === b.person_id) || {}).name} · Primary Beneficiary</span></div>
               <div className="grid grid-cols-2 gap-x-8 gap-y-3 text-[13px]">
                 <Field label="What changed" v={b.what_changed} />
                 <Field label="What did not change" v={b.what_did_not_change} />

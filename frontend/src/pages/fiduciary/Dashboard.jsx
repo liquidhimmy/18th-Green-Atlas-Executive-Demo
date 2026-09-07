@@ -8,7 +8,7 @@ import {
 import LensLayout from "../../components/LensLayout";
 import { Card, SectionTitle, StatusChip, Btn } from "../../components/ui";
 import { useMatter } from "../../App";
-import { ESTATE_IMG } from "../../assets";
+import { ESTATE_IMG, ESTATE_IMG_2 } from "../../assets";
 
 export default function FiduciaryDashboard() {
   const { matter } = useMatter();
@@ -21,15 +21,15 @@ export default function FiduciaryDashboard() {
   const flow = matter.flow;
 
   return (
-    <LensLayout lens="fiduciary" crumbs={["Matters", "Harrington Family Estate"]}>
+    <LensLayout lens="fiduciary" crumbs={["Matters", matter.name]}>
       {/* Hero */}
       <div className="relative rounded-3xl overflow-hidden mb-6 rise">
-        <div className="absolute inset-0" style={{ backgroundImage: `url(${ESTATE_IMG})`, backgroundSize: "cover", backgroundPosition: "center" }} />
+        <div className="absolute inset-0" style={{ backgroundImage: `url(${matter.image === "morgan" ? ESTATE_IMG_2 : ESTATE_IMG})`, backgroundSize: "cover", backgroundPosition: "center" }} />
         <div className="absolute inset-0" style={{ background: "linear-gradient(90deg, rgba(6,16,18,0.95) 30%, rgba(6,16,18,0.55) 70%, rgba(6,16,18,0.85))" }} />
         <div className="relative px-7 py-7 flex items-end justify-between">
           <div>
             <div className="flex items-center gap-3">
-              <h1 className="font-display text-[34px] leading-none">Harrington Family Estate</h1>
+              <h1 className="font-display text-[34px] leading-none">{matter.name}</h1>
               <Star size={18} style={{ color: "#C69214" }} />
             </div>
             <div className="flex items-center gap-3 mt-3 text-[12.5px] muted-text">
@@ -95,7 +95,7 @@ export default function FiduciaryDashboard() {
       </div>
 
       {/* Golden path prompt */}
-      {!flow.changeset_approved && (
+      {matter.interactive && !flow.changeset_approved && (
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
           className="mt-5 panel p-5 flex items-center gap-5" style={{ border: "1px solid rgba(25,195,125,0.4)" }}>
           <span className="grid place-items-center rounded-xl dotpulse" style={{ width: 48, height: 48, background: "rgba(25,195,125,0.14)", color: "#19C37D" }}>
@@ -153,7 +153,9 @@ function QuickCard({ icon: Icon, title, sub, stats, cta, onClick, highlight }) {
 }
 
 function RelationshipMap({ matter }) {
-  const core = matter.people.filter((p) => ["p_robert", "p_maya", "p_sarah", "p_michael", "p_grace"].includes(p.id));
+  const trustees = matter.people.filter((p) => ["trustee", "successor"].includes(p.lens_role)).slice(0, 2);
+  const bens = matter.people.filter((p) => p.lens_role === "beneficiary").slice(0, 3);
+  const core = [...trustees, ...bens].slice(0, 5);
   const positions = [
     { x: 50, y: 12 }, { x: 88, y: 40 }, { x: 74, y: 84 }, { x: 26, y: 84 }, { x: 12, y: 40 },
   ];
@@ -161,13 +163,13 @@ function RelationshipMap({ matter }) {
   return (
     <div className="relative" style={{ height: 210 }}>
       <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-        {positions.map((p, i) => (
-          <line key={i} x1="50" y1="48" x2={p.x} y2={p.y} stroke="rgba(25,195,125,0.25)" strokeWidth="0.4" />
+        {core.map((p, i) => (
+          <line key={i} x1="50" y1="48" x2={positions[i].x} y2={positions[i].y} stroke="rgba(25,195,125,0.25)" strokeWidth="0.4" />
         ))}
       </svg>
       <div className="absolute left-1/2 top-[48%] -translate-x-1/2 -translate-y-1/2 grid place-items-center rounded-full text-center"
         style={{ width: 72, height: 72, background: "rgba(25,195,125,0.12)", border: "1px solid rgba(25,195,125,0.4)" }}>
-        <div className="text-[9px] leading-tight px-1">Harrington Family Estate</div>
+        <div className="text-[9px] leading-tight px-1">{matter.name}</div>
       </div>
       {core.map((p, i) => (
         <div key={p.id} className="ring-node absolute -translate-x-1/2 -translate-y-1/2 flex flex-col items-center"

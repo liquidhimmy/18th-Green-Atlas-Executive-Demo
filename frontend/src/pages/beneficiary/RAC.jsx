@@ -11,7 +11,7 @@ export default function BeneficiaryRAC() {
   const rac = matter.rac.find((r) => r.audience === "beneficiary");
 
   return (
-    <LensLayout lens="beneficiary" crumbs={["Harrington Family Estate", "R.A.C. Statement"]}>
+    <LensLayout lens="beneficiary" crumbs={[matter.name, "R.A.C. Statement"]}>
       <div className="mb-5">
         <h1 className="font-display text-[28px]">Your R.A.C. Statement</h1>
         <p className="text-[14px] mt-1" style={{ color: "#465468" }}>A plain-language record of what happened, why it mattered, and what it means for you.</p>

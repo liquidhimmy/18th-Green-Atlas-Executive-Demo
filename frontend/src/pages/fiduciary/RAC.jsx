@@ -16,7 +16,7 @@ export default function FiduciaryRAC() {
   const selectedEv = matter.evidence_instruments.find((e) => e.id === evId) || matter.evidence_instruments[matter.evidence_instruments.length - 1];
 
   return (
-    <LensLayout lens="fiduciary" crumbs={["Matters", "Harrington Family Estate", "R.A.C. & Evidence"]}>
+    <LensLayout lens="fiduciary" crumbs={["Matters", matter.name, "R.A.C. & Evidence"]}>
       <div className="mb-5">
         <h1 className="font-display text-[28px]">R.A.C. & Evidence</h1>
         <div className="text-[13px] muted-text mt-1">One event can produce three R.A.C. perspectives without creating three versions of reality.</div>
