@@ -5,6 +5,7 @@ import {
   Layers, AlertTriangle, CheckCircle2, Bell, ShieldCheck, ArrowRight, Users, Boxes, ClipboardList, FileText,
 } from "lucide-react";
 import LensLayout from "../../components/LensLayout";
+import PortfolioIntelligence from "../../components/PortfolioIntelligence";
 import { Card, SectionTitle, StatusChip } from "../../components/ui";
 import { useMatter } from "../../App";
 import { statusColor } from "../../theme";
@@ -88,6 +89,8 @@ export default function OversightPortfolio() {
           })}
         </Card>
       </div>
+
+      <PortfolioIntelligence refreshKey={JSON.stringify(portfolio.attention.map((m) => m.id + m.health))} />
     </LensLayout>
   );
 }

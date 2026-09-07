@@ -8,6 +8,7 @@ export const api = {
   listMatters: () => client.get("/matters").then((r) => r.data),
   getMatter: (mid) => client.get("/matter", q(mid)).then((r) => r.data),
   getPortfolio: () => client.get("/portfolio").then((r) => r.data),
+  getIntelligence: () => client.get("/intelligence").then((r) => r.data),
   uploadSource: (mid, file, fallbackName) => {
     const fd = new FormData();
     if (file) fd.append("file", file);

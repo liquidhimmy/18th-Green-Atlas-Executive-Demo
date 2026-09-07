@@ -37,8 +37,9 @@ GET /api/matter?matter_id=, /api/matters, /api/portfolio, /api/health; POST /api
 - Play the story (guided autoplay, 2026-06): 15-beat narration card (`tour.js`, `TourCard.jsx`) that resets the demo, runs the Harrington golden path across all three lenses with live scripted actions, and returns to the north-star. Autoplay every 9s, Pause/Back/Next/Exit. Entry: landing "Play the story" + lens top-bar "Play story". Tested 100% (iteration_4).
 - README.md rewritten as the GitHub-facing project overview (features, lenses, matters, API, layout, run instructions).
 
+- Portfolio Intelligence (2026-06): compact Oversight panel under the Attention Queue. GET /api/intelligence derives a Harrington × Morgan comparison from operational metadata only and three readings — Matter-specific / Officer-specific / Process-specific — with signals that recompute as the story progresses (INSUFFICIENT→DIFFERENTIATED/PRESENT→PARTIAL). Labelled Derived Intelligence; never adjudicates conduct. Tested 30/30 backend, UI 100% (iteration_5). README updated.
+
 ## Backlog / Next (P2)
-- Portfolio/Institutional intelligence panels (derived insights across matters).
 - Make Carter/Davis/Bellamy/Winslow navigable (currently non-interactive summaries).
 - Server-side PDF generation (current export is print-to-PDF).
 - Notes: MARGARET & claim extraction are MOCKED (scripted). Communication send is SIMULATED.

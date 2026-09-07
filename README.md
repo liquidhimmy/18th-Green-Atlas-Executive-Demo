@@ -45,6 +45,7 @@ Press **Play the story** on the landing page (or **Play story** in any lens top 
 - **Communication Hub** — preview/edit the beneficiary notice, send (simulated), letter recorded as completion evidence and a new Evidence Instrument.
 - **Timeline Scrubber** — slide across governed checkpoints and see the Matter exactly as it was at any prior state.
 - **Evidence Export** — any R.A.C. statement or Evidence Instrument exports to an audit-styled PDF (browser print → Save as PDF).
+- **Portfolio Intelligence** (Oversight → Portfolio) — a compact side-by-side of Harrington and Morgan built only from authorized operational metadata (obligation lifecycle, transition type, officer assignment, communication record). Three derived readings — *Matter-specific*, *Officer-specific*, *Process-specific* — show whether a delay belongs to the Matter, the desk, or the step. Labelled *Derived Intelligence*; it never adjudicates conduct and recomputes as the story progresses.
 - **MARGARET** — audience-aware AI assistant. Elicits context, never establishes truth; elicited context is stored as *Requires Review*.
 - **Reset** — returns both Matters to their clean starting checkpoint.
 
@@ -80,7 +81,7 @@ frontend/src/
   api.js               # axios client (REACT_APP_BACKEND_URL + /api)
   theme.js             # per-lens palette & status colors
   pdf.js               # print-to-PDF export
-  components/          # LensLayout, TourCard, MatterTimeline, TimelineScrubber,
+  components/          # LensLayout, TourCard, PortfolioIntelligence, MatterTimeline, TimelineScrubber,
                        # StateComparison, EvidenceInstrument, RACStatement, Margaret, ui
   pages/
     ThreeLensWorkflow.jsx
@@ -101,6 +102,7 @@ All routes are prefixed with `/api`. Mutation endpoints accept `?matter_id=` (de
 | GET | `/matters` | navigable Matter summaries |
 | GET | `/matter?matter_id=` | full Matter document |
 | GET | `/portfolio` | book of trusts, attention queue, summary |
+| GET | `/intelligence` | derived Harrington × Morgan comparison (Matter / officer / process patterns) |
 | POST | `/upload-source` | capture source → scripted claims |
 | POST | `/verify-claims` | human verification |
 | POST | `/create-changeset` | assemble proposed ChangeSet |
