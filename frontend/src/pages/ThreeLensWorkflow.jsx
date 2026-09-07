@@ -7,6 +7,8 @@ import {
 } from "lucide-react";
 import AtlasMark, { Wordmark } from "../components/AtlasMark";
 import { LENSES } from "../theme";
+import { useTour } from "../components/TourCard";
+import { Play } from "lucide-react";
 
 const HUB_NODES = [
   { label: "Governed State", icon: Landmark },
@@ -36,6 +38,7 @@ const OV_STEPS = [
 
 export default function ThreeLensWorkflow() {
   const navigate = useNavigate();
+  const tour = useTour();
   return (
     <div className="grain min-h-screen atlas-dark relative overflow-hidden">
       {/* estate glow */}
@@ -67,6 +70,14 @@ export default function ThreeLensWorkflow() {
               <I size={14} style={{ color: "#19C37D" }} /> {t}
             </span>
           ))}
+          {!tour.active && (
+            <motion.button initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.4 }}
+              onClick={tour.start} data-testid="play-story-btn"
+              className="chip font-semibold transition-all hover:brightness-110 hover:-translate-y-0.5"
+              style={{ background: "#C69214", color: "#1c1405", padding: "8px 18px", boxShadow: "0 0 28px rgba(198,146,20,0.35)" }}>
+              <Play size={14} /> Play the story
+            </motion.button>
+          )}
         </div>
 
         {/* Body grid */}

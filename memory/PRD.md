@@ -34,6 +34,9 @@ GET /api/matter?matter_id=, /api/matters, /api/portfolio, /api/health; POST /api
 - Evidence Export: R.A.C. statements and Evidence Instruments export to audit-styled print-to-PDF (browser Save as PDF).
 - Env recovery: backend/.env (MONGO_URL, DB_NAME, CORS_ORIGINS) and frontend/.env (REACT_APP_BACKEND_URL) recreated; pydantic_core pinned to 2.16.3.
 
+- Play the story (guided autoplay, 2026-06): 15-beat narration card (`tour.js`, `TourCard.jsx`) that resets the demo, runs the Harrington golden path across all three lenses with live scripted actions, and returns to the north-star. Autoplay every 9s, Pause/Back/Next/Exit. Entry: landing "Play the story" + lens top-bar "Play story". Tested 100% (iteration_4).
+- README.md rewritten as the GitHub-facing project overview (features, lenses, matters, API, layout, run instructions).
+
 ## Backlog / Next (P2)
 - Portfolio/Institutional intelligence panels (derived insights across matters).
 - Make Carter/Davis/Bellamy/Winslow navigable (currently non-interactive summaries).

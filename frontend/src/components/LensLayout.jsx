@@ -3,12 +3,13 @@ import { useNavigate, useLocation, Link } from "react-router-dom";
 import {
   Home, FolderKanban, Users, Layers, ClipboardList, ShieldCheck, GitBranch,
   FileText, BarChart3, Bell, Search, Settings, LogOut, RotateCcw, Sparkles,
-  Compass, ChevronDown, Moon, Send, Check,
+  Compass, ChevronDown, Moon, Send, Check, Play,
 } from "lucide-react";
 import { LENSES } from "../theme";
 import { Wordmark } from "./AtlasMark";
 import Margaret from "./Margaret";
 import { useMatter } from "../App";
+import { useTour } from "./TourCard";
 import { primaryBeneficiary } from "../helpers";
 
 const NAV = {
@@ -38,6 +39,7 @@ export default function LensLayout({ lens, children, subtitle, crumbs = [] }) {
   const navigate = useNavigate();
   const location = useLocation();
   const { resetDemo, matter, matters, matterId, switchMatter } = useMatter();
+  const tour = useTour();
   const [margaretOpen, setMargaretOpen] = useState(false);
   const [mSel, setMSel] = useState(false);
   const [resetting, setResetting] = useState(false);
@@ -144,6 +146,12 @@ export default function LensLayout({ lens, children, subtitle, crumbs = [] }) {
               <kbd className="text-[10px] px-1.5 py-0.5 rounded border hair muted-text">⌘K</kbd>
             </div>
             <div className="ml-auto flex items-center gap-2.5">
+              {!tour.active && (
+                <button data-testid="topbar-play-story-btn" onClick={tour.start}
+                  className="chip" style={{ color: "#C69214", background: "rgba(198,146,20,0.12)", border: "1px solid rgba(198,146,20,0.4)" }}>
+                  <Play size={13} /> Play story
+                </button>
+              )}
               <button data-testid="ask-margaret-btn" onClick={() => setMargaretOpen(true)}
                 className="chip" style={{ color: L.accent, background: L.soft, border: `1px solid ${L.accent}44` }}>
                 <Sparkles size={13} /> Ask MARGARET
@@ -159,7 +167,7 @@ export default function LensLayout({ lens, children, subtitle, crumbs = [] }) {
           </header>
 
           {subtitle}
-          <main className="flex-1 overflow-y-auto px-7 py-6">{children}</main>
+          <main className="flex-1 overflow-y-auto px-7 py-6" style={tour.active ? { paddingBottom: 220 } : {}}>{children}</main>
         </div>
       </div>
 

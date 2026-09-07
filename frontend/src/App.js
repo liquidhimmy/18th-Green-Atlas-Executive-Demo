@@ -14,6 +14,7 @@ import BeneficiaryHome from "./pages/beneficiary/Home";
 import BeneficiaryRAC from "./pages/beneficiary/RAC";
 import OversightPortfolio from "./pages/oversight/Portfolio";
 import OversightMatter from "./pages/oversight/MatterOversight";
+import TourCard, { TourProvider } from "./components/TourCard";
 
 const HAR = "ATL-HAR-00217";
 const MatterContext = createContext(null);
@@ -55,6 +56,7 @@ function Provider({ children }) {
 export default function App() {
   return (
     <Provider>
+      <TourProvider>
       <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <Routes>
           <Route path="/" element={<ThreeLensWorkflow />} />
@@ -70,7 +72,9 @@ export default function App() {
           <Route path="/oversight" element={<OversightPortfolio />} />
           <Route path="/oversight/matter" element={<OversightMatter />} />
         </Routes>
+        <TourCard />
       </BrowserRouter>
+      </TourProvider>
     </Provider>
   );
 }
