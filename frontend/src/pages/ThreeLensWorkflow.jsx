@@ -65,8 +65,8 @@ export default function ThreeLensWorkflow() {
 
         {/* feature chips */}
         <div className="flex items-center justify-center gap-3 mt-6 flex-wrap">
-          {[[ShieldCheck, "Secure & Encrypted"], [Users, "Fiduciary-Focused"], [Sparkles, "AI-Powered Insights"], [Lock, "Access Controlled"]].map(([I, t], i) => (
-            <span key={i} className="chip muted-text" style={{ border: "1px solid rgba(120,160,150,0.2)", padding: "6px 14px" }}>
+          {[[ShieldCheck, "Secure & Encrypted"], [Users, "Fiduciary-Focused"], [Sparkles, "AI-Powered Insights"], [Lock, "Access Controlled"]].map(([I, t]) => (
+            <span key={t} className="chip muted-text" style={{ border: "1px solid rgba(120,160,150,0.2)", padding: "6px 14px" }}>
               <I size={14} style={{ color: "#19C37D" }} /> {t}
             </span>
           ))}
@@ -122,8 +122,8 @@ export default function ThreeLensWorkflow() {
             [Users, "Beneficiary impact triggers communication & clarification."],
             [Eye, "Oversight monitors exceptions and conduct."],
             [Compass, "Every consequential change becomes shared causal history."],
-          ].map(([I, t], i) => (
-            <div key={i} className="panel px-4 py-3 flex items-center gap-3 text-[12.5px] muted-text">
+          ].map(([I, t]) => (
+            <div key={t} className="panel px-4 py-3 flex items-center gap-3 text-[12.5px] muted-text">
               <I size={16} style={{ color: "#19C37D" }} /> {t}
             </div>
           ))}
@@ -192,7 +192,7 @@ function LensColumn({ className, lens, steps, onClick, audience, darkCard }) {
       <div className="text-[10px] uppercase tracking-[0.14em] muted-text mb-3">{audience}</div>
       <div className="space-y-1.5">
         {steps.map((s, i) => (
-          <div key={i} className="flex items-center gap-2.5 text-[12px] py-1.5 px-2.5 rounded-lg transition-colors"
+          <div key={s} className="flex items-center gap-2.5 text-[12px] py-1.5 px-2.5 rounded-lg transition-colors"
             style={{ background: "rgba(255,255,255,0.02)" }}>
             <span className="grid place-items-center rounded-full text-[10px] font-semibold shrink-0"
               style={{ width: 18, height: 18, background: `${L.accent}22`, color: L.accent }}>{i + 1}</span>
@@ -222,7 +222,7 @@ function OversightRow({ onClick }) {
       </div>
       <div className="grid grid-cols-8 gap-2.5">
         {OV_STEPS.map((s, i) => (
-          <div key={i} className="flex flex-col gap-1.5 text-[11.5px] py-2.5 px-3 rounded-lg" style={{ background: "rgba(255,255,255,0.02)" }}>
+          <div key={s} className="flex flex-col gap-1.5 text-[11.5px] py-2.5 px-3 rounded-lg" style={{ background: "rgba(255,255,255,0.02)" }}>
             <span className="grid place-items-center rounded-full text-[10px] font-semibold"
               style={{ width: 18, height: 18, background: `${L.accent}22`, color: L.accent }}>{i + 1}</span>
             <span style={{ color: "#c8cbb8" }}>{s}</span>

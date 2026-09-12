@@ -10,30 +10,43 @@ import { featuredObligation, featuredEvent, primaryBeneficiary } from "../../hel
 import { exportPdf } from "../../pdf";
 import api from "../../api";
 
+const HAR = "ATL-HAR-00217";
+
+function draftFor(matter) {
+  const evt = featuredEvent(matter);
+  const ben = primaryBeneficiary(matter);
+  const impact = matter.beneficiary_impacts[0] || {};
+  const subject = matter.matter_id === HAR ? `Notice of Trustee Succession — ${matter.name}` : `Explanation of Discretionary Distribution — ${matter.name}`;
+  const body = evt
+    ? `Dear ${ben.name},\n\nWe are writing to inform you of a governed change on your trust relationship: ${evt.title}. ${evt.transition ? evt.transition.changes.join(" ") + "." : ""}\n\nWhat this means for you: ${impact.what_it_means || "Please review your relationship home for details."}\n\nAction required: ${impact.action_required || "None."}\n\nThis notice is issued under ${evt.authority}. A source-linked R.A.C. statement is available for your records.\n\nSincerely,\n${matter.officer}, Fiduciary Officer`
+    : `Dear ${ben.name},\n\nThis is a communication regarding your trust relationship.\n\nSincerely,\n${matter.officer}`;
+  return { subject, body };
+}
+
+// Seeds the editable draft once the matter is loaded; user edits are preserved afterwards.
+function useDraft(matter) {
+  const [subject, setSubject] = useState("");
+  const [body, setBody] = useState("");
+  const seeded = useRef(false);
+  useEffect(() => {
+    if (!matter || seeded.current) return;
+    const d = draftFor(matter);
+    setSubject(d.subject); setBody(d.body);
+    seeded.current = true;
+  }, [matter, setSubject, setBody]);
+  return { subject, setSubject, body, setBody };
+}
+
 export default function Communications() {
   const { matter, refresh, matterId } = useMatter();
   const navigate = useNavigate();
   const [busy, setBusy] = useState(false);
-  const [subject, setSubject] = useState("");
-  const [body, setBody] = useState("");
-  const init = useRef(false);
-  const ready = !!matter;
-  const ob = ready ? featuredObligation(matter) : null;
-  const evt = ready ? featuredEvent(matter) : null;
-  const ben = ready ? primaryBeneficiary(matter) : null;
-  const ctype = matter?.matter_id === "ATL-HAR-00217" ? "Beneficiary Notice" : "Distribution Explanation";
-  const defSubject = !ready ? "" : matter.matter_id === "ATL-HAR-00217"
-    ? `Notice of Trustee Succession — ${matter.name}`
-    : `Explanation of Discretionary Distribution — ${matter.name}`;
-  const defBody = !ready ? "" : evt
-    ? `Dear ${ben.name},\n\nWe are writing to inform you of a governed change on your trust relationship: ${evt.title}. ${evt.transition ? evt.transition.changes.join(" ") + "." : ""}\n\nWhat this means for you: ${(matter.beneficiary_impacts[0] || {}).what_it_means || "Please review your relationship home for details."}\n\nAction required: ${(matter.beneficiary_impacts[0] || {}).action_required || "None."}\n\nThis notice is issued under ${evt.authority}. A source-linked R.A.C. statement is available for your records.\n\nSincerely,\n${matter.officer}, Fiduciary Officer`
-    : `Dear ${ben.name},\n\nThis is a communication regarding your trust relationship.\n\nSincerely,\n${matter.officer}`;
-
-  useEffect(() => {
-    if (ready && !init.current) { setSubject(defSubject); setBody(defBody); init.current = true; }
-  }, [ready, defSubject, defBody]);
-
+  const { subject, setSubject, body, setBody } = useDraft(matter);
   if (!matter) return <LensLayout lens="fiduciary"><Loader /></LensLayout>;
+
+  const ob = featuredObligation(matter);
+  const ben = primaryBeneficiary(matter);
+  const ctype = matter.matter_id === HAR ? "Beneficiary Notice" : "Distribution Explanation";
   const open = ob && ob.status !== "SATISFIED";
 
   const send = async () => {
@@ -46,7 +59,7 @@ export default function Communications() {
   const downloadLetter = () => exportPdf({
     title: subject, subtitle: `${ctype} · To ${ben.name}`, instrumentId: `${matter.matter_id}-COMM`,
     matterName: matter.name,
-    sections: body.split("\n\n").map((p, i) => ({ h: i === 0 ? "" : "", b: p.replace(/\n/g, "<br/>") })),
+    sections: body.split("\n\n").map((p) => ({ h: "", b: p })),
     disclaimer: "Reference demo communication. Synthetic data.",
   });
 
@@ -93,33 +106,44 @@ export default function Communications() {
 
         {/* Side: obligation + sent log */}
         <div className="col-span-4 space-y-5">
-          <Card className="p-5">
-            <SectionTitle icon={Paperclip} title="Linked obligation" />
-            {ob ? (
-              <div>
-                <div className="flex items-center gap-2 mb-1"><span className="text-[13.5px] font-medium">{ob.title}</span></div>
-                <StatusChip status={ob.status} />
-                <div className="text-[12px] muted-text mt-2">Sending this communication satisfies the obligation and attaches the letter as completion evidence.</div>
-              </div>
-            ) : <div className="text-[13px] muted-text">No open communication obligation on this Matter.</div>}
-          </Card>
-
-          <Card className="p-5">
-            <SectionTitle icon={Inbox} title="Communication log" />
-            {(matter.communications || []).length === 0 && <div className="text-[13px] muted-text">No communications sent yet.</div>}
-            <div className="space-y-3">
-              {(matter.communications || []).map((c) => (
-                <motion.div key={c.id} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} className="rounded-xl p-3 border hair">
-                  <div className="flex items-center gap-2"><FileText size={14} style={{ color: "#19C37D" }} /><span className="text-[13px] font-medium">{c.type}</span><StatusChip status={c.status} /></div>
-                  <div className="text-[12px] muted-text mt-1">To {c.to} · {c.date}</div>
-                  <div className="text-[12px] mt-1">{c.summary}</div>
-                  <button onClick={() => navigate("/fiduciary/rac")} className="text-[11.5px] mt-2 font-semibold" style={{ color: "#19C37D" }}>View attached evidence →</button>
-                </motion.div>
-              ))}
-            </div>
-          </Card>
+          <LinkedObligation ob={ob} />
+          <CommunicationLog comms={matter.communications || []} onEvidence={() => navigate("/fiduciary/rac")} />
         </div>
       </div>
     </LensLayout>
+  );
+}
+
+function LinkedObligation({ ob }) {
+  return (
+    <Card className="p-5">
+      <SectionTitle icon={Paperclip} title="Linked obligation" />
+      {ob ? (
+        <div>
+          <div className="flex items-center gap-2 mb-1"><span className="text-[13.5px] font-medium">{ob.title}</span></div>
+          <StatusChip status={ob.status} />
+          <div className="text-[12px] muted-text mt-2">Sending this communication satisfies the obligation and attaches the letter as completion evidence.</div>
+        </div>
+      ) : <div className="text-[13px] muted-text">No open communication obligation on this Matter.</div>}
+    </Card>
+  );
+}
+
+function CommunicationLog({ comms, onEvidence }) {
+  return (
+    <Card className="p-5">
+      <SectionTitle icon={Inbox} title="Communication log" />
+      {comms.length === 0 && <div className="text-[13px] muted-text">No communications sent yet.</div>}
+      <div className="space-y-3">
+        {comms.map((c) => (
+          <motion.div key={c.id} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} className="rounded-xl p-3 border hair">
+            <div className="flex items-center gap-2"><FileText size={14} style={{ color: "#19C37D" }} /><span className="text-[13px] font-medium">{c.type}</span><StatusChip status={c.status} /></div>
+            <div className="text-[12px] muted-text mt-1">To {c.to} · {c.date}</div>
+            <div className="text-[12px] mt-1">{c.summary}</div>
+            <button onClick={onEvidence} className="text-[11.5px] mt-2 font-semibold" style={{ color: "#19C37D" }}>View attached evidence →</button>
+          </motion.div>
+        ))}
+      </div>
+    </Card>
   );
 }

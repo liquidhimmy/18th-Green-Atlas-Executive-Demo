@@ -35,16 +35,16 @@ function Provider({ children }) {
     setMatters(list.matters);
     setLoading(false);
     return m;
-  }, [matterId]);
+  }, [matterId, setMatter, setPortfolio, setMatters, setLoading]);
 
-  useEffect(() => { refresh(matterId); /* eslint-disable-next-line */ }, [matterId]);
+  useEffect(() => { refresh(); }, [refresh]);
 
-  const switchMatter = useCallback((mid) => { setMatterId(mid); }, []);
+  const switchMatter = useCallback((mid) => { setMatterId(mid); }, [setMatterId]);
 
   const resetDemo = useCallback(async () => {
     await api.reset();
-    return refresh(matterId);
-  }, [refresh, matterId]);
+    return refresh();
+  }, [refresh]);
 
   return (
     <MatterContext.Provider value={{ matter, matters, matterId, switchMatter, portfolio, loading, refresh, resetDemo }}>

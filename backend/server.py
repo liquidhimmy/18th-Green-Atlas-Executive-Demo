@@ -499,45 +499,68 @@ async def get_portfolio():
             "harrington_flagged": any(m["id"] == HAR and m["health"] != "ON_TRACK" for m in nav)}
 
 
+def _stage(ev, ob, resolved):
+    if not ev:
+        return "No consequential change yet"
+    if resolved:
+        return "Closed — communication recorded"
+    if ob["status"] == "ESCALATED":
+        return "Escalated — awaiting fiduciary resolution"
+    return "Open — post-transition obligation pending"
+
+
 def matter_ops(doc):
     ob = featured_ob(doc)
     ev = next((e for e in reversed(doc["events"]) if e["kind"] == "CONSEQUENTIAL"), None)
     cur = next((s for s in doc["states"] if s["status"] == "CURRENT"), doc["states"][-1])
-    comms = doc.get("communications", [])
     resolved = ev is not None and ob is None
-    stage = "No consequential change yet" if not ev else "Closed — communication recorded" if resolved else \
-        "Escalated — awaiting fiduciary resolution" if ob["status"] == "ESCALATED" else "Open — post-transition obligation pending"
+    ob_status = ob["status"] if ob else ("SATISFIED" if resolved else "NONE")
     return {"id": doc["matter_id"], "name": doc["name"], "officer": doc["officer"], "checkpoint": cur["version"],
             "event": ev["title"] if ev else "—", "transition": f"{ev['transition']['from']} → {ev['transition']['to']}" if ev else "—",
-            "obligation": ob["title"] if ob else ("Satisfied" if resolved else "—"),
-            "obligation_status": ob["status"] if ob else ("SATISFIED" if resolved else "NONE"),
+            "obligation": ob["title"] if ob else ("Satisfied" if resolved else "—"), "obligation_status": ob_status,
             "severity": ob.get("severity", "—") if ob else "—", "days_open": ob.get("days_open", 0) if ob else 0,
-            "stage": stage, "comms": len(comms), "escalated": bool(doc["flow"].get("obligation_escalated")),
-            "resolved": resolved, "active": ev is not None}
+            "stage": _stage(ev, ob, resolved), "comms": len(doc.get("communications", [])),
+            "escalated": bool(doc["flow"].get("obligation_escalated")), "resolved": resolved, "active": ev is not None}
+
+
+def _matter_pattern(h, m, both_active):
+    if not both_active:
+        return {"kind": "MATTER", "label": "Matter-specific", "signal": "INSUFFICIENT", "evidence": [],
+                "reading": "Only one Matter has a consequential transition in the window — Matter-specific comparison requires both."}
+    return {"kind": "MATTER", "label": "Matter-specific", "signal": "DIFFERENTIATED",
+            "evidence": [f"Harrington · {h['event']} · {h['severity']}", f"Morgan · {m['event']} · {m['severity']}"],
+            "reading": "Exception drivers differ by Matter: Harrington's obligation is a notice deadline after a trustee succession; Morgan's is a rationale-documentation exception after a discretionary distribution flagged by portfolio intelligence. Severity is set by the Matter's own transition type, not by who operates it."}
+
+
+def _officer_pattern(h, m, both_open):
+    same_officer = h["officer"] == m["officer"]
+    evidence = [f"Harrington · {h['obligation_status']} · {h['days_open']}d", f"Morgan · {m['obligation_status']} · {m['days_open']}d"]
+    if not same_officer:
+        reading = "Different officers — delays cannot be attributed to a single desk."
+    elif both_open:
+        reading = f"Both open obligations sit with the same officer ({h['officer']}). Concurrent open items on one desk is a workload signal — attention belongs with the officer's queue, not the Matters."
+    else:
+        reading = f"Both Matters share an officer ({h['officer']}), but at least one loop is closed. No concurrent-load signal at this time."
+    return {"kind": "OFFICER", "label": "Officer-specific", "reading": reading, "evidence": evidence,
+            "signal": "PRESENT" if both_open and same_officer else "NOT PRESENT"}
+
+
+def _process_pattern(h, m, both_active, both_open):
+    evidence = [f"Harrington · {h['stage']}", f"Morgan · {m['stage']}"]
+    if both_open:
+        return {"kind": "PROCESS", "label": "Process-specific", "signal": "PRESENT", "evidence": evidence,
+                "reading": "The delay recurs at the same step on both Matters — the post-transition obligation that requires a beneficiary communication. A step that lags regardless of Matter or transition type points to process design, not conduct."}
+    if both_active and (h["resolved"] or m["resolved"]):
+        return {"kind": "PROCESS", "label": "Process-specific", "signal": "PARTIAL", "evidence": evidence,
+                "reading": "Closed loops show the post-transition communication step completing once escalated — consistent with a process that depends on supervisory prompting."}
+    return {"kind": "PROCESS", "label": "Process-specific", "signal": "NOT PRESENT", "evidence": evidence,
+            "reading": "No repeated step-level delay observed across Matters yet."}
 
 
 def portfolio_patterns(h, m):
-    same_officer = h["officer"] == m["officer"]
     both_active = h["active"] and m["active"]
     both_open = both_active and not h["resolved"] and not m["resolved"]
-    patterns = []
-    # Matter-specific: driver differs by matter even when officer & process are shared
-    patterns.append({"kind": "MATTER", "label": "Matter-specific", "reading":
-        "Exception drivers differ by Matter: Harrington's obligation is a notice deadline after a trustee succession; Morgan's is a rationale-documentation exception after a discretionary distribution flagged by portfolio intelligence. Severity is set by the Matter's own transition type, not by who operates it."
-        if both_active else "Only one Matter has a consequential transition in the window — Matter-specific comparison requires both.",
-        "evidence": [f"Harrington · {h['event']} · {h['severity']}", f"Morgan · {m['event']} · {m['severity']}"] if both_active else [], "signal": "DIFFERENTIATED" if both_active else "INSUFFICIENT"})
-    # Officer-specific: same officer holds the open obligation on both
-    patterns.append({"kind": "OFFICER", "label": "Officer-specific", "reading":
-        (f"Both open obligations sit with the same officer ({h['officer']}). Concurrent open items on one desk is a workload signal — attention belongs with the officer's queue, not the Matters."
-         if both_open else f"Both Matters share an officer ({h['officer']}), but at least one loop is closed. No concurrent-load signal at this time.")
-        if same_officer else "Different officers — delays cannot be attributed to a single desk.",
-        "evidence": [f"Harrington · {h['obligation_status']} · {h['days_open']}d", f"Morgan · {m['obligation_status']} · {m['days_open']}d"], "signal": "PRESENT" if both_open and same_officer else "NOT PRESENT"})
-    # Process-specific: delay recurs at the same step (post-transition communication) across Matters
-    patterns.append({"kind": "PROCESS", "label": "Process-specific", "reading":
-        "The delay recurs at the same step on both Matters — the post-transition obligation that requires a beneficiary communication. A step that lags regardless of Matter or transition type points to process design, not conduct."
-        if both_open else ("Closed loops show the post-transition communication step completing once escalated — consistent with a process that depends on supervisory prompting." if (h["resolved"] or m["resolved"]) and both_active else "No repeated step-level delay observed across Matters yet."),
-        "evidence": [f"Harrington · {h['stage']}", f"Morgan · {m['stage']}"], "signal": "PRESENT" if both_open else "PARTIAL" if both_active else "NOT PRESENT"})
-    return patterns
+    return [_matter_pattern(h, m, both_active), _officer_pattern(h, m, both_open), _process_pattern(h, m, both_active, both_open)]
 
 
 @api.get("/intelligence")

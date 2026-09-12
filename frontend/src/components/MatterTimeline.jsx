@@ -89,7 +89,7 @@ function ConsequentialDetail({ e, matter, accent }) {
         <Node icon={GitCommit} label="State Transition" accent={accent}>
           <span className="font-mono text-[12px]">{e.transition.from} → {e.transition.to}</span>
           <ul className="mt-1.5 space-y-1">
-            {e.transition.changes.map((c, i) => <li key={i} className="text-[12px] muted-text">• {c}</li>)}
+            {e.transition.changes.map((c) => <li key={c} className="text-[12px] muted-text">• {c}</li>)}
           </ul>
         </Node>
       </div>

@@ -22,27 +22,7 @@ export default function FiduciaryDashboard() {
 
   return (
     <LensLayout lens="fiduciary" crumbs={["Matters", matter.name]}>
-      {/* Hero */}
-      <div className="relative rounded-3xl overflow-hidden mb-6 rise">
-        <div className="absolute inset-0" style={{ backgroundImage: `url(${matter.image === "morgan" ? ESTATE_IMG_2 : ESTATE_IMG})`, backgroundSize: "cover", backgroundPosition: "center" }} />
-        <div className="absolute inset-0" style={{ background: "linear-gradient(90deg, rgba(6,16,18,0.95) 30%, rgba(6,16,18,0.55) 70%, rgba(6,16,18,0.85))" }} />
-        <div className="relative px-7 py-7 flex items-end justify-between">
-          <div>
-            <div className="flex items-center gap-3">
-              <h1 className="font-display text-[34px] leading-none">{matter.name}</h1>
-              <Star size={18} style={{ color: "#C69214" }} />
-            </div>
-            <div className="flex items-center gap-3 mt-3 text-[12.5px] muted-text">
-              <StatusChip status="ACTIVE" />
-              <span className="font-mono">{matter.matter_id}</span>
-              <span>· {matter.people.length} People · {matter.structures.length} Structures · {matter.assets.length} Assets</span>
-            </div>
-          </div>
-          <div className="text-right font-display italic text-[14px]" style={{ color: "#d9c48a", maxWidth: 260 }}>
-            {matter.tagline}
-          </div>
-        </div>
-      </div>
+      <Hero matter={matter} />
 
       <div className="grid grid-cols-12 gap-5">
         {/* Governed state */}
@@ -56,8 +36,8 @@ export default function FiduciaryDashboard() {
           </div>
           <p className="text-[13px] muted-text mb-4">{current.summary}</p>
           <div className="grid grid-cols-4 gap-2 mb-4">
-            {[[Users, matter.people.length, "People"], [Layers, matter.structures.length, "Structures"], [Boxes, matter.assets.length, "Assets"], [ClipboardList, 37, "Obligations"]].map(([I, v, l], i) => (
-              <div key={i} className="rounded-xl py-3 text-center" style={{ background: "rgba(25,195,125,0.06)", border: "1px solid rgba(25,195,125,0.15)" }}>
+            {[[Users, matter.people.length, "People"], [Layers, matter.structures.length, "Structures"], [Boxes, matter.assets.length, "Assets"], [ClipboardList, 37, "Obligations"]].map(([I, v, l]) => (
+              <div key={l} className="rounded-xl py-3 text-center" style={{ background: "rgba(25,195,125,0.06)", border: "1px solid rgba(25,195,125,0.15)" }}>
                 <I size={16} style={{ color: "#19C37D" }} className="mx-auto mb-1.5" />
                 <div className="font-display text-[20px]">{v}</div>
                 <div className="text-[10.5px] muted-text uppercase">{l}</div>
@@ -128,6 +108,29 @@ export default function FiduciaryDashboard() {
   );
 }
 
+function Hero({ matter }) {
+  return (
+    <div className="relative rounded-3xl overflow-hidden mb-6 rise">
+      <div className="absolute inset-0" style={{ backgroundImage: `url(${matter.image === "morgan" ? ESTATE_IMG_2 : ESTATE_IMG})`, backgroundSize: "cover", backgroundPosition: "center" }} />
+      <div className="absolute inset-0" style={{ background: "linear-gradient(90deg, rgba(6,16,18,0.95) 30%, rgba(6,16,18,0.55) 70%, rgba(6,16,18,0.85))" }} />
+      <div className="relative px-7 py-7 flex items-end justify-between">
+        <div>
+          <div className="flex items-center gap-3">
+            <h1 className="font-display text-[34px] leading-none">{matter.name}</h1>
+            <Star size={18} style={{ color: "#C69214" }} />
+          </div>
+          <div className="flex items-center gap-3 mt-3 text-[12.5px] muted-text">
+            <StatusChip status="ACTIVE" />
+            <span className="font-mono">{matter.matter_id}</span>
+            <span>· {matter.people.length} People · {matter.structures.length} Structures · {matter.assets.length} Assets</span>
+          </div>
+        </div>
+        <div className="text-right font-display italic text-[14px]" style={{ color: "#d9c48a", maxWidth: 260 }}>{matter.tagline}</div>
+      </div>
+    </div>
+  );
+}
+
 function QuickCard({ icon: Icon, title, sub, stats, cta, onClick, highlight }) {
   return (
     <Card className="p-5 flex flex-col" hover>
@@ -137,8 +140,8 @@ function QuickCard({ icon: Icon, title, sub, stats, cta, onClick, highlight }) {
       </div>
       <div className="text-[11.5px] muted-text mb-4">{sub}</div>
       <div className="grid grid-cols-3 gap-1 mb-4">
-        {stats.map(([v, l], i) => (
-          <div key={i} className="text-center">
+        {stats.map(([v, l]) => (
+          <div key={l} className="text-center">
             <div className="font-display text-[19px]" style={{ color: highlight && l === "Open" ? "#F59E0B" : undefined }}>{v}</div>
             <div className="text-[10px] muted-text">{l}</div>
           </div>
@@ -164,7 +167,7 @@ function RelationshipMap({ matter }) {
     <div className="relative" style={{ height: 210 }}>
       <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
         {core.map((p, i) => (
-          <line key={i} x1="50" y1="48" x2={positions[i].x} y2={positions[i].y} stroke="rgba(25,195,125,0.25)" strokeWidth="0.4" />
+          <line key={p.id} x1="50" y1="48" x2={positions[i].x} y2={positions[i].y} stroke="rgba(25,195,125,0.25)" strokeWidth="0.4" />
         ))}
       </svg>
       <div className="absolute left-1/2 top-[48%] -translate-x-1/2 -translate-y-1/2 grid place-items-center rounded-full text-center"

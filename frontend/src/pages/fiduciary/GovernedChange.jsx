@@ -33,7 +33,7 @@ export default function GovernedChange() {
   const [step, setStep] = useState(0);
   const [busy, setBusy] = useState(false);
 
-  useEffect(() => { if (matter) setStep(stepFromFlow(matter.flow)); }, [matter]);
+  useEffect(() => { if (matter) setStep(stepFromFlow(matter.flow)); }, [matter, setStep]);
   if (!matter) return <LensLayout lens="fiduciary"><Loader /></LensLayout>;
   const flow = matter.flow;
 
@@ -69,32 +69,7 @@ export default function GovernedChange() {
       </div>
 
       {/* Stepper */}
-      <div className="flex items-center gap-2 mb-7">
-        {STEPS.map((s, i) => {
-          const done = i < step || (i === 3 && flow.changeset_approved);
-          const active = i === step;
-          const Icon = s.icon;
-          return (
-            <React.Fragment key={s.key}>
-              <button onClick={() => i <= step && setStep(i)} className="flex items-center gap-2.5" data-testid={`step-${s.key}`}>
-                <span className="grid place-items-center rounded-full transition-all" style={{
-                  width: 38, height: 38,
-                  background: done ? "#19C37D" : active ? "rgba(25,195,125,0.16)" : "rgba(255,255,255,0.04)",
-                  color: done ? "#04150f" : active ? "#19C37D" : "#7f9a92",
-                  border: `1px solid ${active || done ? "#19C37D" : "rgba(120,160,150,0.2)"}`,
-                }}>
-                  {done ? <Check size={18} /> : <Icon size={17} />}
-                </span>
-                <div className="text-left">
-                  <div className="text-[10px] uppercase tracking-wide muted-text">Step {i + 1}</div>
-                  <div className="text-[13px] font-medium" style={{ color: active ? "#19C37D" : undefined }}>{s.label}</div>
-                </div>
-              </button>
-              {i < STEPS.length - 1 && <div className="flex-1 h-px" style={{ background: i < step ? "#19C37D66" : "rgba(120,160,150,0.18)" }} />}
-            </React.Fragment>
-          );
-        })}
-      </div>
+      <Stepper step={step} flow={flow} onSelect={setStep} />
 
       <AnimatePresence mode="wait">
         <motion.div key={step} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.3 }}>
@@ -107,6 +82,38 @@ export default function GovernedChange() {
         </motion.div>
       </AnimatePresence>
     </LensLayout>
+  );
+}
+
+/* ---------- Stepper ---------- */
+function Stepper({ step, flow, onSelect }) {
+  return (
+    <div className="flex items-center gap-2 mb-7">
+      {STEPS.map((s, i) => {
+        const done = i < step || (i === 3 && flow.changeset_approved);
+        const active = i === step;
+        const Icon = s.icon;
+        return (
+          <React.Fragment key={s.key}>
+            <button onClick={() => i <= step && onSelect(i)} className="flex items-center gap-2.5" data-testid={`step-${s.key}`}>
+              <span className="grid place-items-center rounded-full transition-all" style={{
+                width: 38, height: 38,
+                background: done ? "#19C37D" : active ? "rgba(25,195,125,0.16)" : "rgba(255,255,255,0.04)",
+                color: done ? "#04150f" : active ? "#19C37D" : "#7f9a92",
+                border: `1px solid ${active || done ? "#19C37D" : "rgba(120,160,150,0.2)"}`,
+              }}>
+                {done ? <Check size={18} /> : <Icon size={17} />}
+              </span>
+              <div className="text-left">
+                <div className="text-[10px] uppercase tracking-wide muted-text">Step {i + 1}</div>
+                <div className="text-[13px] font-medium" style={{ color: active ? "#19C37D" : undefined }}>{s.label}</div>
+              </div>
+            </button>
+            {i < STEPS.length - 1 && <div className="flex-1 h-px" style={{ background: i < step ? "#19C37D66" : "rgba(120,160,150,0.18)" }} />}
+          </React.Fragment>
+        );
+      })}
+    </div>
   );
 }
 
@@ -246,7 +253,7 @@ function ChangeSetStep({ matter, onCreate, onApprove, busy }) {
 
       <div className="rounded-xl p-4 mb-6" style={{ background: "rgba(25,195,125,0.06)", border: "1px solid rgba(25,195,125,0.2)" }}>
         <div className="text-[11px] uppercase tracking-wide mb-2" style={{ color: "#19C37D" }}>If approved</div>
-        {cs.consequences.map((c, i) => <div key={i} className="text-[12.5px] muted-text flex items-center gap-2 py-0.5"><CheckCircle2 size={13} style={{ color: "#19C37D" }} /> {c}</div>)}
+        {cs.consequences.map((c) => <div key={c} className="text-[12.5px] muted-text flex items-center gap-2 py-0.5"><CheckCircle2 size={13} style={{ color: "#19C37D" }} /> {c}</div>)}
       </div>
 
       {cs.status === "APPROVED" ? (
@@ -279,7 +286,7 @@ function EstablishStep({ matter, navigate }) {
     <div>
       <div className="grid grid-cols-2 gap-5 mb-6">
         {[["Previous — Superseded", before, "#6B7280"], ["Current — Released", after, "#19C37D"]].map(([label, s, c], i) => (
-          <Card key={i} className="p-5" style={i === 1 ? { border: "1px solid rgba(25,195,125,0.4)" } : {}}>
+          <Card key={label} className="p-5" style={i === 1 ? { border: "1px solid rgba(25,195,125,0.4)" } : {}}>
             <div className="flex items-center gap-2 mb-3">
               <span className="font-display text-[18px]" style={{ color: c }}>{s.version}</span>
               <StatusChip status={s.status} />

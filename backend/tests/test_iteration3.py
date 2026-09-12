@@ -25,7 +25,7 @@ def reset_each():
 def test_morgan_initial_v4():
     d = requests.get(f"{API}/matter", params={"matter_id": MOR}, timeout=15).json()
     assert d["name"] == "Morgan Family Trust"
-    assert d["interactive"] is True
+    assert d["interactive"]
     cur = [s for s in d["states"] if s["status"] == "CURRENT"]
     assert len(cur) == 1 and cur[0]["version"] == "v4.0"
     assert d["pending_source"]["name"] == "Distribution Request & Trustee Resolution.pdf"
@@ -33,7 +33,7 @@ def test_morgan_initial_v4():
     assert d["rac"] == [] and d["beneficiary_impacts"] == []
     assert len(d["evidence_instruments"]) == 1
     assert d["evidence_instruments"][0]["id"] == "mev_v4"
-    assert all(v is False for v in d["flow"].values())
+    assert not any(d["flow"].values())
 
 
 def test_matters_list_has_two_navigable():
@@ -64,7 +64,7 @@ def test_morgan_golden_path():
 
     # Second approve returns already
     ap2 = requests.post(f"{API}/approve-changeset", params={"matter_id": MOR}, timeout=15).json()
-    assert ap2.get("already") is True
+    assert ap2.get("already")
 
     m = requests.get(f"{API}/matter", params={"matter_id": MOR}, timeout=15).json()
     cur = [s for s in m["states"] if s["status"] == "CURRENT"]
@@ -93,7 +93,7 @@ def test_portfolio_after_morgan_approve():
     mor = next((m for m in p["attention"] if m["id"] == MOR), None)
     assert mor is not None
     assert mor["health"] == "EXCEPTION"
-    assert mor["navigable"] is True
+    assert mor["navigable"]
 
 
 # ---------------- Morgan communication hub ----------------
@@ -118,7 +118,7 @@ def test_morgan_communication_flow():
     assert any(s["version"] == "v5.0" for s in supers)
     assert len(m["communications"]) == 1
     assert len(m["evidence_instruments"]) == 3
-    assert m["flow"]["obligation_resolved"] is True
+    assert m["flow"]["obligation_resolved"]
 
 
 # ---------------- Harrington regression ----------------

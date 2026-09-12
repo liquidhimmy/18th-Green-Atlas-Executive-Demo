@@ -36,14 +36,14 @@ def test_initial_matter_v2_current():
     current = [s for s in d["states"] if s["status"] == "CURRENT"]
     assert len(current) == 1
     assert current[0]["version"] == "v2.0"
-    assert d["flow"]["source_uploaded"] is False
+    assert not d["flow"]["source_uploaded"]
 
 
 def test_initial_portfolio_no_flag():
     r = requests.get(f"{API}/portfolio", timeout=15)
     assert r.status_code == 200
     d = r.json()
-    assert d["harrington_flagged"] is False
+    assert not d["harrington_flagged"]
     ids = [m["id"] for m in d["attention"]]
     assert "ATL-HAR-00217" not in ids
 
@@ -102,7 +102,7 @@ def test_golden_path_approve_changeset():
 
 def test_portfolio_flagged_after_approval():
     d = requests.get(f"{API}/portfolio", timeout=15).json()
-    assert d["harrington_flagged"] is True
+    assert d["harrington_flagged"]
     ids = [m["id"] for m in d["attention"]]
     assert "ATL-HAR-00217" in ids
 
@@ -153,7 +153,7 @@ def test_obligation_resolve_creates_v4():
     assert current[0]["version"] == "v4.0"
     # exception closed → not flagged anymore
     p = requests.get(f"{API}/portfolio", timeout=15).json()
-    assert p["harrington_flagged"] is False
+    assert not p["harrington_flagged"]
 
 
 def test_obligation_not_found():
@@ -168,5 +168,5 @@ def test_reset():
     m = requests.get(f"{API}/matter", timeout=15).json()
     current = [s for s in m["states"] if s["status"] == "CURRENT"]
     assert current[0]["version"] == "v2.0"
-    assert m["flow"]["changeset_approved"] is False
+    assert not m["flow"]["changeset_approved"]
     assert not any(e["id"] == "evt_succession" for e in m["events"])

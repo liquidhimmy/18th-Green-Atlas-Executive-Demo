@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { ArrowRight, Clock } from "lucide-react";
 import { StatusChip } from "./ui";
 
 export default function StateComparison({ matter, accent = "#19C37D" }) {
-  const states = matter?.states || [];
-  const current = states.find((s) => s.status === "CURRENT") || states[states.length - 1];
-  const others = states.filter((s) => s.version !== current?.version);
+  const states = useMemo(() => matter?.states || [], [matter?.states]);
+  const current = useMemo(() => states.find((s) => s.status === "CURRENT") || states[states.length - 1], [states]);
+  const others = useMemo(() => states.filter((s) => s.version !== current?.version), [states, current]);
   const [leftV, setLeftV] = useState(others.length ? others[others.length - 1].version : current?.version);
   const left = states.find((s) => s.version === leftV) || others[0];
   const right = current;
@@ -29,7 +29,7 @@ export default function StateComparison({ matter, accent = "#19C37D" }) {
         <select value={leftV} onChange={(e) => setLeftV(e.target.value)} data-testid="state-compare-select"
           className="bg-transparent border hair rounded-lg px-3 py-1.5 text-[13px] outline-none"
           style={{ color: accent }}>
-          {states.filter((s) => s.version !== current.version).map((s) => (
+          {others.map((s) => (
             <option key={s.version} value={s.version} style={{ color: "#000" }}>{s.version} — {s.title}</option>
           ))}
         </select>
@@ -44,10 +44,10 @@ export default function StateComparison({ matter, accent = "#19C37D" }) {
           <div className="px-4 py-3 text-[11px] uppercase tracking-wide muted-text border-b hair">Field</div>
           <div className="px-4 py-3 text-[13px] font-semibold border-b border-l hair">{left.version} <span className="muted-text font-normal">· {left.status}</span></div>
           <div className="px-4 py-3 text-[13px] font-semibold border-b border-l hair" style={{ color: accent }}>{right.version} · Current</div>
-          {rows.map(([label, a, b], i) => {
+          {rows.map(([label, a, b]) => {
             const changed = String(a) !== String(b);
             return (
-              <React.Fragment key={i}>
+              <React.Fragment key={label}>
                 <div className="px-4 py-3 text-[12.5px] muted-text border-b hair last:border-0">{label}</div>
                 <div className="px-4 py-3 text-[13px] border-b border-l hair last:border-0">{a}</div>
                 <div className="px-4 py-3 text-[13px] border-b border-l hair last:border-0"
