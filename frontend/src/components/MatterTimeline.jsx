@@ -5,6 +5,7 @@ import {
   ShieldCheck, User, ClipboardList, Users, FileCheck2, Zap, Clock,
 } from "lucide-react";
 import { StatusChip, ClassTag } from "./ui";
+import { Term } from "./Glossary";
 
 const ICONS = { landmark: Landmark, "file-text": FileText, refresh: RefreshCw, check: CheckCircle2 };
 
@@ -82,7 +83,7 @@ function ConsequentialDetail({ e, matter, accent }) {
   return (
     <div className="mt-4 pt-4 border-t hair grid grid-cols-2 gap-x-6">
       <div>
-        <div className="flex items-center gap-2 mb-1"><ClassTag kind="GOVERNED" /></div>
+        <div className="flex items-center gap-3 mb-1"><ClassTag kind="GOVERNED" /><span className="text-[11.5px] muted-text"><Term k="consequential-event" accent={accent}>What is a Consequential Event?</Term></span></div>
         <Node icon={Zap} label="Trigger" accent={accent}>{e.trigger}</Node>
         <Node icon={FileText} label="Governing Source" accent={accent}>{e.source}</Node>
         <Node icon={ShieldCheck} label="Verification" accent={accent}>{e.verification}</Node>

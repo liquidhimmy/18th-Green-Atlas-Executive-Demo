@@ -40,10 +40,11 @@ Switch Matters from the top-bar selector. Four additional trusts appear in the O
 
 ### Run the Trustee Succession Story (guided autoplay)
 
-Press **Run the Trustee Succession Story** on the landing page (or **Run Succession Story** in any lens top bar). A narration card walks a partner through all fifteen beats — resetting the demo, running the Harrington golden path across the three lenses, and returning to the north-star. Autoplay advances every 9 seconds; use *Pause*, *Back*, *Next*, or *Exit* at any time.
+Press **Run the Trustee Succession Story** on the landing page (or **Run Succession Story** in any lens top bar). A narration card walks a partner through all sixteen beats — resetting the demo, running the Harrington golden path across the three lenses, pausing on the climax — *what Atlas can prove that documents and systems cannot* — and returning to the north-star. The Oversight beat frames Portfolio Intelligence as process integrity, not officer surveillance: *officers act, processes govern, evidence allows oversight.* Autoplay advances every 9 seconds; use *Pause*, *Back*, *Next*, or *Exit* at any time.
 
 ### Other features
 
+- **Atlas language, defined on first contact** — *Consequential Event*, *ChangeSet*, *Evidence Instrument* and *R.A.C.* are tappable terms wherever they first appear (and on the landing page); a definition and a one-line "what it proves" open on click, so the glossary works on phones and tablets.
 - **Before Atlas / After Atlas** — shown in the Governed Change wizard immediately before the transition to the next governed state: what the firm could merely *show* from scattered artifacts versus what Atlas lets it *prove* (when authority became effective, why it was valid, who verified it, what changed, who was notified).
 - **Communication Hub** — preview/edit the beneficiary notice, send (simulated), letter recorded as completion evidence and a new Evidence Instrument.
 - **Timeline Scrubber** — slide across governed checkpoints and see the Matter exactly as it was at any prior state.
@@ -80,7 +81,7 @@ backend/
   tests/               # pytest suites (backend_test.py, test_iteration3.py)
 frontend/src/
   App.js               # MatterContext + routes + TourCard
-  tour.js              # Trustee Succession Story script (15 beats)
+  tour.js              # Trustee Succession Story script (16 beats)
   api.js               # axios client (REACT_APP_BACKEND_URL + /api)
   theme.js             # per-lens palette & status colors
   pdf.js               # print-to-PDF export

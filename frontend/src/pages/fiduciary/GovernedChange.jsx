@@ -9,6 +9,7 @@ import LensLayout from "../../components/LensLayout";
 import { Card, StatusChip, Btn, ClassTag } from "../../components/ui";
 import { Loader } from "./Dashboard";
 import BeforeAfterAtlas from "../../components/BeforeAfterAtlas";
+import { Term } from "../../components/Glossary";
 import { useMatter } from "../../App";
 import { currentState, priorState, featuredEvent, featuredObligation } from "../../helpers";
 import api from "../../api";
@@ -217,7 +218,7 @@ function ChangeSetStep({ matter, onCreate, onApprove, busy }) {
     return (
       <Card className="p-8 max-w-[640px] text-center">
         <GitBranch size={38} style={{ color: "#19C37D" }} className="mx-auto mb-3" />
-        <div className="font-display text-[19px]">Assemble the ChangeSet</div>
+        <div className="font-display text-[19px]"><Term k="changeset">Assemble the ChangeSet</Term></div>
         <div className="text-[13px] muted-text mt-2 mb-6">Verified claims become a proposed ChangeSet — a controlled proposal reviewed before it becomes current state.</div>
         <Btn onClick={onCreate} disabled={busy} data-testid="create-changeset-btn">
           {busy ? <Loader2 size={16} className="animate-spin" /> : <GitBranch size={16} />} Create ChangeSet
@@ -230,7 +231,7 @@ function ChangeSetStep({ matter, onCreate, onApprove, busy }) {
       <div className="flex items-center justify-between mb-5">
         <div>
           <div className="flex items-center gap-2.5">
-            <span className="font-display text-[19px]">{cs.title}</span>
+            <span className="font-display text-[19px]"><Term k="changeset">{cs.title}</Term></span>
             <StatusChip status={cs.status} />
           </div>
           <div className="text-[12.5px] muted-text mt-1">Authority: {cs.authority}</div>
@@ -306,7 +307,7 @@ function EstablishStep({ matter, navigate }) {
           <span className="grid place-items-center rounded-xl" style={{ width: 44, height: 44, background: "rgba(25,195,125,0.14)" }}><CheckCircle2 size={22} style={{ color: "#19C37D" }} /></span>
           <div>
             <div className="font-display text-[19px]" data-testid="established-state-title">Governed state established ({after.version})</div>
-            <div className="text-[13px] muted-text">Atlas linked this into one Consequential Event and created downstream responsibilities.</div>
+            <div className="text-[13px] muted-text">Atlas linked this into one <Term k="consequential-event">Consequential Event</Term> and created downstream responsibilities.</div>
           </div>
         </div>
         <div className="grid grid-cols-3 gap-3">

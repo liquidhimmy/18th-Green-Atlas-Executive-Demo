@@ -30,17 +30,17 @@ function useStepRunner({ active, idx, setBusy }) {
   const { refresh, switchMatter } = useMatter();
   const navigate = useNavigate();
   const lastRun = useRef(-1);
+  const mounted = useRef(true);
+  useEffect(() => () => { mounted.current = false; }, []);
   useEffect(() => { if (!active) lastRun.current = -1; }, [active]);
   useEffect(() => {
-    if (!active || lastRun.current === idx) return undefined;
+    if (!active || lastRun.current === idx) return;
     lastRun.current = idx;
     const step = STORY[idx];
     navigate(step.route);
-    if (!step.action) return undefined;
-    let cancelled = false;
+    if (!step.action) return;
     setBusy(true);
-    step.action({ refresh, switchMatter }).catch(() => {}).finally(() => { if (!cancelled) setBusy(false); });
-    return () => { cancelled = true; };
+    step.action({ refresh, switchMatter }).catch(() => {}).finally(() => { if (mounted.current) setBusy(false); });
   }, [active, idx, navigate, refresh, switchMatter, setBusy]);
 }
 
@@ -48,7 +48,7 @@ function useAutoAdvance({ active, auto, busy, idx, setIdx, setAuto }) {
   useEffect(() => {
     if (!active || !auto || busy) return undefined;
     if (idx >= LAST) { setAuto(false); return undefined; }
-    const t = setTimeout(() => setIdx((i) => Math.min(i + 1, LAST)), AUTO_MS);
+    const t = setTimeout(() => setIdx((i) => Math.min(i + 1, LAST)), STORY[idx].dwell || AUTO_MS);
     return () => clearTimeout(t);
   }, [active, auto, busy, idx, setIdx, setAuto]);
 }
@@ -63,9 +63,9 @@ export default function TourCard() {
   const L = LENSES[step.lens];
   return (
     <AnimatePresence>
-      <motion.div key="tour" initial={{ opacity: 0, y: 40, x: "-50%" }} animate={{ opacity: 1, y: 0, x: "-50%" }} exit={{ opacity: 0, y: 40, x: "-50%" }}
-        className="fixed left-1/2 bottom-6 z-[80] w-[min(720px,92vw)]" data-testid="tour-card">
-        <div className="rounded-2xl overflow-hidden" style={{ background: "rgba(7,17,19,0.92)", backdropFilter: "blur(18px)", border: `1px solid ${L.accent}66`, boxShadow: `0 30px 80px rgba(0,0,0,0.55), 0 0 40px ${L.accent}22`, color: "#EAF2EF" }}>
+      <motion.div key="tour" initial={{ opacity: 0, y: 40, x: step.climax ? 0 : "-50%" }} animate={{ opacity: 1, y: 0, x: step.climax ? 0 : "-50%" }} exit={{ opacity: 0, y: 40, x: step.climax ? 0 : "-50%" }}
+        className={`fixed bottom-6 z-[80] ${step.climax ? "right-6 w-[min(560px,92vw)]" : "left-1/2 w-[min(720px,92vw)]"}`} data-testid="tour-card" data-climax={step.climax ? "true" : undefined}>
+        <div className="rounded-2xl overflow-hidden" style={{ background: step.climax ? "rgba(20,15,4,0.94)" : "rgba(7,17,19,0.92)", backdropFilter: "blur(18px)", border: `1px solid ${L.accent}${step.climax ? "" : "66"}`, boxShadow: `0 30px 80px rgba(0,0,0,0.55), 0 0 ${step.climax ? 70 : 40}px ${L.accent}${step.climax ? "44" : "22"}`, color: "#EAF2EF" }}>
           <div className="h-[3px] w-full" style={{ background: "rgba(255,255,255,0.08)" }}>
             <motion.div className="h-full" animate={{ width: `${((idx + 1) / STORY.length) * 100}%` }} style={{ background: L.accent }} />
           </div>
@@ -73,8 +73,10 @@ export default function TourCard() {
             <TourHeader L={L} idx={idx} onExit={stop} />
             <AnimatePresence mode="wait">
               <motion.div key={step.route + idx} initial={{ opacity: 0, x: 12 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -12 }} transition={{ duration: 0.25 }}>
-                <div className="font-display text-[20px] mt-2.5 leading-snug" data-testid="tour-step-title">{step.title}</div>
-                <p className="text-[13.5px] mt-1.5 leading-relaxed" style={{ color: "#c3d3ce" }} data-testid="tour-step-text">{step.text}</p>
+                <div className={`font-display mt-2.5 leading-snug ${step.climax ? "text-[23px]" : "text-[20px]"}`} style={step.climax ? { color: L.accent } : {}} data-testid="tour-step-title">{step.title}</div>
+                <div className="text-[13.5px] mt-1.5 leading-relaxed space-y-2" style={{ color: "#c3d3ce" }} data-testid="tour-step-text">
+                  {step.text.split("\n\n").map((p) => <p key={p.slice(0, 24)}>{p}</p>)}
+                </div>
               </motion.div>
             </AnimatePresence>
             <TourControls L={L} idx={idx} auto={auto} busy={busy} setAuto={setAuto} setIdx={setIdx} stop={stop} />

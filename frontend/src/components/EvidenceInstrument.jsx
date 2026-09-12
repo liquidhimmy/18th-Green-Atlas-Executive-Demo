@@ -2,6 +2,7 @@ import React from "react";
 import { QrCode, FileText, ShieldCheck, Download, CheckCircle2 } from "lucide-react";
 import { StatusChip } from "./ui";
 import { exportPdf } from "../pdf";
+import { Term } from "./Glossary";
 
 export default function EvidenceInstrument({ instrument, accent = "#19C37D", matterName }) {
   if (!instrument) return null;
@@ -34,7 +35,7 @@ export default function EvidenceInstrument({ instrument, accent = "#19C37D", mat
         <div className="px-6 py-5 border-b" style={{ borderColor: "#D8DDE6", background: "#fff" }}>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.16em]" style={{ color: "#0F5C4D" }}>
-              <FileText size={14} /> Evidence Instrument
+              <FileText size={14} /> <Term k="evidence-instrument" accent="#0F5C4D">Evidence Instrument</Term>
             </div>
             <span className="chip" style={{ color: "#10B981", background: "#10B98118", border: "1px solid #10B98144" }}>
               <CheckCircle2 size={12} /> Verified

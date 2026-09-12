@@ -41,6 +41,9 @@ GET /api/matter?matter_id=, /api/matters, /api/portfolio, /api/health; POST /api
 
 - Copy & framing (2026-06): story mode renamed "Run the Trustee Succession Story" (landing) / "Run Succession Story" (top bar); R.A.C. defined as "Relationship-and-Conduct Statement" on first appearance (landing hub definition box, R.A.C. pages, statement header, dashboard card, oversight section, tour). New Before Atlas / After Atlas comparison (`BeforeAfterAtlas.jsx`) shown in the ChangeSet step immediately before approval, matter-specific rows, live checkpoint numbers. Tested 100% (iteration_6).
 
+- Code review + story polish (2026-06, iteration_7 100%): pdf.js rebuilt with DOM APIs (no document.write); hook deps fixed (stale-closure bug in tour runner found & fixed via mounted ref); components split (LensLayout→Sidebar/Topbar/MatterSelector, TourCard hooks, Margaret chat hook, Communications draft hook, Stepper, Hero, ScrubberRail); stable keys; useMemo; Python pattern helpers. Story now 16 beats with a gold, right-anchored climax card ("What can Atlas prove that documents and systems cannot?", 22s dwell) beside the Before/After table; Oversight beat frames Portfolio Intelligence as process integrity ("Officers act. Processes govern. Evidence allows oversight."). Clickable glossary (`Glossary.jsx`: Consequential Event, ChangeSet, Evidence Instrument, R.A.C.) on landing strip and at each first-contact surface.
+- Env note: preview URL rotated to https://estate-workflow.preview.emergentagent.com (frontend/.env updated by platform).
+
 ## Backlog / Next (P2)
 - Make Carter/Davis/Bellamy/Winslow navigable (currently non-interactive summaries).
 - Server-side PDF generation (current export is print-to-PDF).

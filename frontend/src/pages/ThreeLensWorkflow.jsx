@@ -8,6 +8,7 @@ import {
 import AtlasMark, { Wordmark } from "../components/AtlasMark";
 import { LENSES } from "../theme";
 import { useTour } from "../components/TourCard";
+import { GlossaryStrip } from "../components/Glossary";
 import { Play } from "lucide-react";
 
 const HUB_NODES = [
@@ -98,6 +99,7 @@ export default function ThreeLensWorkflow() {
               style={{ background: "rgba(25,195,125,0.06)", border: "1px solid rgba(25,195,125,0.2)", color: "#c3d3ce" }}>
               <b style={{ color: "#19C37D" }}>R.A.C. — Relationship-and-Conduct Statement.</b> A plain-language record of what happened, under what authority, on what evidence, and what it means for its reader — generated from the governed history for each audience.
             </div>
+            <div className="mt-3"><GlossaryStrip /></div>
             <div className="flex items-center justify-center gap-4 mt-3 text-[11px] muted-text">
               {[["#19C37D", "People"], ["#3B82F6", "Structures"], ["#C69214", "Assets"], ["#7C3AED", "Obligations"]].map(([c, t]) => (
                 <span key={t} className="flex items-center gap-1.5"><span style={{ width: 8, height: 8, borderRadius: 999, background: c }} /> {t}</span>

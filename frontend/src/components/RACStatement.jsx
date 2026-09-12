@@ -1,6 +1,7 @@
 import React from "react";
 import { ShieldCheck, FileText, Download } from "lucide-react";
 import { exportPdf } from "../pdf";
+import { Term } from "./Glossary";
 
 export default function RACStatement({ rac, accent = "#19C37D", light = false }) {
   if (!rac) return null;
@@ -17,7 +18,7 @@ export default function RACStatement({ rac, accent = "#19C37D", light = false })
       <div className="px-6 py-5 border-b" style={{ borderColor: light ? "#D8DDE6" : `${accent}22` }}>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.16em]" style={{ color: accent }}>
-            <ShieldCheck size={14} /> R.A.C. · Relationship-and-Conduct Statement
+            <ShieldCheck size={14} /> <Term k="rac" accent={accent}>R.A.C. · Relationship-and-Conduct Statement</Term>
           </div>
           <div className="flex items-center gap-3">
             <button onClick={download} data-testid="rac-export-btn" className="inline-flex items-center gap-1.5 text-[12px] font-semibold" style={{ color: accent }}>
