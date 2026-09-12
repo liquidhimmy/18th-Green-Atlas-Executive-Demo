@@ -67,7 +67,7 @@ export default function TourCard() {
           </div>
           <div className="px-6 pt-4 pb-5">
             <div className="flex items-center gap-3 text-[10.5px] uppercase tracking-[0.16em]" style={{ color: L.accent }}>
-              <Sparkles size={13} /> Play the story · {L.name}
+              <Sparkles size={13} /> Trustee Succession Story · {L.name}
               <span className="ml-auto font-mono normal-case tracking-normal" style={{ color: "#8FA6A0" }} data-testid="tour-step-counter">{idx + 1} / {STORY.length}</span>
               <button onClick={stop} className="rounded-full p-1 hover:bg-white/10" data-testid="tour-exit-btn" aria-label="Exit story"><X size={15} style={{ color: "#8FA6A0" }} /></button>
             </div>

@@ -128,7 +128,7 @@ export default function OversightMatter() {
 
       {ovRac && (
         <div className="mt-6">
-          <SectionTitle icon={ShieldCheck} title="Oversight R.A.C." sub="Conduct, exceptions, and supervisory attention" accent={GOLD} />
+          <SectionTitle icon={ShieldCheck} title="Oversight R.A.C." sub="Relationship-and-Conduct Statement — conduct, exceptions, and supervisory attention" accent={GOLD} />
           <RACStatement rac={ovRac} accent={GOLD} />
         </div>
       )}

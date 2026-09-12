@@ -149,7 +149,7 @@ export default function LensLayout({ lens, children, subtitle, crumbs = [] }) {
               {!tour.active && (
                 <button data-testid="topbar-play-story-btn" onClick={tour.start}
                   className="chip" style={{ color: "#C69214", background: "rgba(198,146,20,0.12)", border: "1px solid rgba(198,146,20,0.4)" }}>
-                  <Play size={13} /> Play story
+                  <Play size={13} /> Run Succession Story
                 </button>
               )}
               <button data-testid="ask-margaret-btn" onClick={() => setMargaretOpen(true)}

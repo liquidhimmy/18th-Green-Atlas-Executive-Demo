@@ -120,7 +120,7 @@ export default function FiduciaryDashboard() {
         <QuickCard icon={ClipboardList} title="Obligations" sub="Track fiduciary duties."
           stats={[[matter.obligations.length, "Total"], [matter.obligations.filter(o=>o.status==="ON_TRACK").length, "On track"], [openOb, "Open"]]}
           cta="View Obligations" onClick={() => navigate("/fiduciary/obligations")} highlight={openOb>0} />
-        <QuickCard icon={ShieldCheck} title="R.A.C. Statements" sub="Record conduct & alignment."
+        <QuickCard icon={ShieldCheck} title="R.A.C. Statements" sub="Relationship-and-Conduct: record conduct & alignment."
           stats={[[matter.rac.filter(r=>r.audience==="fiduciary").length, "Fiduciary"], [matter.rac.length, "Total"], [0, "Overdue"]]}
           cta="View R.A.C." onClick={() => navigate("/fiduciary/rac")} />
       </div>

@@ -13,9 +13,11 @@ A single consequential event — the **Successor Trustee Activation** on the Har
 ```
 upload source → AI claims (not governed truth) → human verification → ChangeSet (proposal)
 → approve → new governed state v3.0 (prior state superseded, never overwritten)
-→ Consequential Event + OPEN obligation + beneficiary impact + three R.A.C. statements + Evidence Instrument
+→ Consequential Event + OPEN obligation + beneficiary impact + three R.A.C. statements* + Evidence Instrument
 → oversight surfaces the exception → escalate → beneficiary notice sent → obligation satisfied → v4.0
 ```
+
+\* **R.A.C. — Relationship-and-Conduct Statement.** A plain-language record of what happened, under what authority, on what evidence, and what it means for its reader. One governed event produces one R.A.C. per audience (fiduciary, beneficiary, oversight) — never three versions of reality.
 
 The app begins and ends on the **Three-Lens Workflow** north-star screen.
 
@@ -36,12 +38,13 @@ The app begins and ends on the **Three-Lens Workflow** north-star screen.
 
 Switch Matters from the top-bar selector. Four additional trusts appear in the Oversight portfolio as non-interactive summaries.
 
-### Play the story (guided autoplay)
+### Run the Trustee Succession Story (guided autoplay)
 
-Press **Play the story** on the landing page (or **Play story** in any lens top bar). A narration card walks a partner through all fifteen beats — resetting the demo, running the Harrington golden path across the three lenses, and returning to the north-star. Autoplay advances every 9 seconds; use *Pause*, *Back*, *Next*, or *Exit* at any time.
+Press **Run the Trustee Succession Story** on the landing page (or **Run Succession Story** in any lens top bar). A narration card walks a partner through all fifteen beats — resetting the demo, running the Harrington golden path across the three lenses, and returning to the north-star. Autoplay advances every 9 seconds; use *Pause*, *Back*, *Next*, or *Exit* at any time.
 
 ### Other features
 
+- **Before Atlas / After Atlas** — shown in the Governed Change wizard immediately before the transition to the next governed state: what the firm could merely *show* from scattered artifacts versus what Atlas lets it *prove* (when authority became effective, why it was valid, who verified it, what changed, who was notified).
 - **Communication Hub** — preview/edit the beneficiary notice, send (simulated), letter recorded as completion evidence and a new Evidence Instrument.
 - **Timeline Scrubber** — slide across governed checkpoints and see the Matter exactly as it was at any prior state.
 - **Evidence Export** — any R.A.C. statement or Evidence Instrument exports to an audit-styled PDF (browser print → Save as PDF).
@@ -77,7 +80,7 @@ backend/
   tests/               # pytest suites (backend_test.py, test_iteration3.py)
 frontend/src/
   App.js               # MatterContext + routes + TourCard
-  tour.js              # "Play the story" script (15 beats)
+  tour.js              # Trustee Succession Story script (15 beats)
   api.js               # axios client (REACT_APP_BACKEND_URL + /api)
   theme.js             # per-lens palette & status colors
   pdf.js               # print-to-PDF export

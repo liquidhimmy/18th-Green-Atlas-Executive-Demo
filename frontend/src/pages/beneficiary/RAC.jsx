@@ -14,7 +14,7 @@ export default function BeneficiaryRAC() {
     <LensLayout lens="beneficiary" crumbs={[matter.name, "R.A.C. Statement"]}>
       <div className="mb-5">
         <h1 className="font-display text-[28px]">Your R.A.C. Statement</h1>
-        <p className="text-[14px] mt-1" style={{ color: "#465468" }}>A plain-language record of what happened, why it mattered, and what it means for you.</p>
+        <p className="text-[14px] mt-1" style={{ color: "#465468" }}>R.A.C. stands for Relationship-and-Conduct — a plain-language record of what happened, why it mattered, and what it means for you.</p>
       </div>
       {rac ? <RACStatement rac={rac} accent="#7C3AED" light /> : (
         <Card className="p-8 text-center" style={{ color: "#465468" }}>

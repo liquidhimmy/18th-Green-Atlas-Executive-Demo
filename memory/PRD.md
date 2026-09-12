@@ -39,6 +39,8 @@ GET /api/matter?matter_id=, /api/matters, /api/portfolio, /api/health; POST /api
 
 - Portfolio Intelligence (2026-06): compact Oversight panel under the Attention Queue. GET /api/intelligence derives a Harrington × Morgan comparison from operational metadata only and three readings — Matter-specific / Officer-specific / Process-specific — with signals that recompute as the story progresses (INSUFFICIENT→DIFFERENTIATED/PRESENT→PARTIAL). Labelled Derived Intelligence; never adjudicates conduct. Tested 30/30 backend, UI 100% (iteration_5). README updated.
 
+- Copy & framing (2026-06): story mode renamed "Run the Trustee Succession Story" (landing) / "Run Succession Story" (top bar); R.A.C. defined as "Relationship-and-Conduct Statement" on first appearance (landing hub definition box, R.A.C. pages, statement header, dashboard card, oversight section, tour). New Before Atlas / After Atlas comparison (`BeforeAfterAtlas.jsx`) shown in the ChangeSet step immediately before approval, matter-specific rows, live checkpoint numbers. Tested 100% (iteration_6).
+
 ## Backlog / Next (P2)
 - Make Carter/Davis/Bellamy/Winslow navigable (currently non-interactive summaries).
 - Server-side PDF generation (current export is print-to-PDF).

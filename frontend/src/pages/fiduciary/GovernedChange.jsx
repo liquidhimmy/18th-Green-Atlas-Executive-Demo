@@ -8,6 +8,7 @@ import {
 import LensLayout from "../../components/LensLayout";
 import { Card, StatusChip, Btn, ClassTag } from "../../components/ui";
 import { Loader } from "./Dashboard";
+import BeforeAfterAtlas from "../../components/BeforeAfterAtlas";
 import { useMatter } from "../../App";
 import { currentState, priorState, featuredEvent, featuredObligation } from "../../helpers";
 import api from "../../api";
@@ -203,6 +204,7 @@ function ExtractStep({ matter, onVerify, busy }) {
 /* ---------- Step 3: ChangeSet ---------- */
 function ChangeSetStep({ matter, onCreate, onApprove, busy }) {
   const cs = matter.changesets[matter.changesets.length - 1];
+  const stateChange = cs?.changes.find((c) => c.type === "STATE");
   const impactColor = { HIGH: "#EF4444", MEDIUM: "#F59E0B", LOW: "#3B82F6" };
   if (!cs) {
     return (
@@ -252,12 +254,15 @@ function ChangeSetStep({ matter, onCreate, onApprove, busy }) {
           <CheckCircle2 size={16} /> ChangeSet approved — new governed state established.
         </div>
       ) : (
-        <div className="flex items-center gap-3">
-          <Btn onClick={onApprove} disabled={busy} data-testid="approve-changeset-btn">
-            {busy ? <Loader2 size={16} className="animate-spin" /> : <CheckCircle2 size={16} />} Approve & Establish State
-          </Btn>
-          <span className="text-[12px] muted-text">Prior state becomes superseded — not overwritten.</span>
-        </div>
+        <>
+          <BeforeAfterAtlas matter={matter} from={stateChange?.before} to={stateChange?.after} />
+          <div className="flex items-center gap-3">
+            <Btn onClick={onApprove} disabled={busy} data-testid="approve-changeset-btn">
+              {busy ? <Loader2 size={16} className="animate-spin" /> : <CheckCircle2 size={16} />} Approve & Establish State
+            </Btn>
+            <span className="text-[12px] muted-text">Prior state becomes superseded — not overwritten.</span>
+          </div>
+        </>
       )}
     </Card>
   );

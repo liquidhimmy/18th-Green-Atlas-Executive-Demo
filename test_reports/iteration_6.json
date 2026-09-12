@@ -1,0 +1,26 @@
+{
+  "summary": "Iteration 6 (copy/labels + BeforeAfterAtlas presentational component) verified end-to-end. Backend regression 30/30 passing (no code changes this iteration). Frontend: landing play-story-btn text 'Run the Trustee Succession Story' OK; rac-definition box visible with 'R.A.C. — Relationship-and-Conduct Statement.' text; no horizontal overflow at 1920. Tour card header contains 'TRUSTEE SUCCESSION STORY · <LENS>' at all inspected steps. Step 5 (ChangeSet, Harrington) shows before-after-atlas with 5 rows, header 'GOVERNED STATE V3.0', punchline 'once v2.0 is superseded by v3.0'. Step 6 approve removes BFA; established-state-title reads 'Governed state established (v3.0)'. Step 10 title contains 'Relationship-and-Conduct'. Lens topbar-play-story-btn reads 'Run Succession Story'. Morgan flow: reset → select ATL-MOR-00456 → Begin Governed Change → use-demo-source → verify → create-changeset → BFA header 'GOVERNED STATE V5.0', row0 mentions 'wire confirmation', punchline 'once v4.0 is superseded by v5.0'; approve → BFA gone, established 'Governed state established (v5.0)'. R.A.C. labels: fiduciary/rac subtitle contains 'Relationship-and-Conduct Statement' and RACStatement header renders 'R.A.C. · RELATIONSHIP-AND-CONDUCT STATEMENT' (CSS uppercase of the mixed-case source). beneficiary/rac subtitle 'R.A.C. stands for Relationship-and-Conduct' OK. Fiduciary dashboard R.A.C. Statements card shows 'Relationship-and-Conduct: record conduct & alignment.' OK. Oversight matter (Morgan flagged) shows 'Oversight R.A.C.' section with sub 'Relationship-and-Conduct Statement — conduct, exceptions, and supervisory attention'.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Landing / (three-lens hub)", "issues": ["Hub node label 'R.A.C. Statement' bounding box (y 598–659.1) just touches caption 'Unified history. Verifiable lineage. Trusted outcomes.' (y 658–676) — 1.1px vertical intersection with shared x range at 1920. Visually the two are adjacent (not overlapping glyphs) but the bounding boxes technically intersect. Consider adding ~4–8px extra vertical breathing room between the hub svg group and the caption line to future-proof against font/DPR variations."]}
+    ]
+  },
+  "test_report_links": ["/app/backend/tests/backend_test.py", "/app/backend/tests/test_iteration3.py", "/app/backend/tests/test_iteration5.py", "/app/test_reports/pytest/iteration_6.xml"],
+  "action_items": ["(Optional/minor) Increase vertical padding between the hub 'R.A.C. Statement' node label and the 'Unified history…' caption on ThreeLensWorkflow so bounding boxes don't touch."],
+  "critical_code_review_comments": [
+    "BeforeAfterAtlas is presentational and matter-scoped via a ROWS map keyed by matter_id — clean; consider adding a fallback branch when a future matter_id has no entry so the component doesn't crash (currently would render undefined rows).",
+    "ChangeSetStep renders BFA only when cs.status !== 'APPROVED' — verified it disappears immediately after approve without stale DOM.",
+    "Tour progression correctly drives router navigation and matter switching via context; no console errors during full 15-step run."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "100% (30/30)", "frontend": "100% (all acceptance criteria met; one 1px bbox-touch flagged as minor design polish)"},
+  "test_credentials": "N/A (no auth)",
+  "seed_data_creation": "None. Used built-in seed matters ATL-HAR-00217 and ATL-MOR-00456. Demo reset via POST /api/reset at end.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Matter switching is React context (not URL). After clicking [data-testid=matter-selector] → [data-testid=matter-option-<ID>], DO NOT page.goto() (full reload resets matterId to HAR default). Navigate via in-app links like the dashboard 'Begin Governed Change' button, or 'R.A.C. & Evidence' / 'Beneficiary Lens' / 'Oversight Lens' text links in the sidebar. RACStatement header text is stored as 'R.A.C. · Relationship-and-Conduct Statement' but rendered UPPERCASE via CSS text-transform — use case-insensitive regex when asserting. Beneficiary /rac only shows the RACStatement header once a R.A.C. exists (i.e., after approving a ChangeSet); before that it only shows the subtitle 'R.A.C. stands for Relationship-and-Conduct'. Backend POST /api/reset requires JSON body ({}) or trailing slash; simple urllib POST without body returned 403 via ingress — use curl with -d '{}' or requests.post(...).",
+  "rca of the issue": "N/A — no bugs found this iteration."
+}

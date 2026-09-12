@@ -19,7 +19,7 @@ export default function FiduciaryRAC() {
     <LensLayout lens="fiduciary" crumbs={["Matters", matter.name, "R.A.C. & Evidence"]}>
       <div className="mb-5">
         <h1 className="font-display text-[28px]">R.A.C. & Evidence</h1>
-        <div className="text-[13px] muted-text mt-1">One event can produce three R.A.C. perspectives without creating three versions of reality.</div>
+        <div className="text-[13px] muted-text mt-1">R.A.C. — Relationship-and-Conduct Statement: what happened, under what authority, on what evidence, and what remains. One event can produce three R.A.C. perspectives without creating three versions of reality.</div>
       </div>
 
       <SectionTitle icon={ShieldCheck} title="Fiduciary R.A.C." sub="What did we do, under what authority, and what remains outstanding" />

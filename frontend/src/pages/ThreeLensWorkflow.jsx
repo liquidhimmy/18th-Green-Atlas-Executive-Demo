@@ -15,7 +15,7 @@ const HUB_NODES = [
   { label: "Conduct", icon: User },
   { label: "Obligations", icon: ClipboardList },
   { label: "Evidence", icon: FileText },
-  { label: "R.A.C.", icon: ShieldCheck },
+  { label: "R.A.C. Statement", icon: ShieldCheck },
   { label: "MARGARET AI", icon: Sparkles, gold: true },
   { label: "Beneficiary Impact", icon: Users },
   { label: "Consequential Events", icon: Calendar },
@@ -75,7 +75,7 @@ export default function ThreeLensWorkflow() {
               onClick={tour.start} data-testid="play-story-btn"
               className="chip font-semibold transition-all hover:brightness-110 hover:-translate-y-0.5"
               style={{ background: "#C69214", color: "#1c1405", padding: "8px 18px", boxShadow: "0 0 28px rgba(198,146,20,0.35)" }}>
-              <Play size={14} /> Play the story
+              <Play size={14} /> Run the Trustee Succession Story
             </motion.button>
           )}
         </div>
@@ -93,7 +93,11 @@ export default function ThreeLensWorkflow() {
               <div className="text-[12px] muted-text tracking-wide">Single Source of Truth</div>
             </div>
             <Hub />
-            <div className="text-center text-[12px] muted-text mt-2">Unified history. Verifiable lineage. Trusted outcomes.</div>
+            <div className="text-center text-[12px] muted-text mt-4">Unified history. Verifiable lineage. Trusted outcomes.</div>
+            <div className="mx-auto mt-3 max-w-[460px] rounded-xl px-4 py-2.5 text-[12px] leading-snug text-center" data-testid="rac-definition"
+              style={{ background: "rgba(25,195,125,0.06)", border: "1px solid rgba(25,195,125,0.2)", color: "#c3d3ce" }}>
+              <b style={{ color: "#19C37D" }}>R.A.C. — Relationship-and-Conduct Statement.</b> A plain-language record of what happened, under what authority, on what evidence, and what it means for its reader — generated from the governed history for each audience.
+            </div>
             <div className="flex items-center justify-center gap-4 mt-3 text-[11px] muted-text">
               {[["#19C37D", "People"], ["#3B82F6", "Structures"], ["#C69214", "Assets"], ["#7C3AED", "Obligations"]].map(([c, t]) => (
                 <span key={t} className="flex items-center gap-1.5"><span style={{ width: 8, height: 8, borderRadius: 999, background: c }} /> {t}</span>
@@ -137,7 +141,7 @@ export default function ThreeLensWorkflow() {
 function Hub() {
   const R = 148;
   return (
-    <div className="relative mx-auto" style={{ width: 400, height: 360 }}>
+    <div className="relative mx-auto" style={{ width: 400, height: 400 }}>
       {/* rings */}
       <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full"
         style={{ width: 320, height: 320, border: "1px solid rgba(25,195,125,0.16)" }} />
@@ -153,7 +157,7 @@ function Hub() {
       {HUB_NODES.map((n, i) => {
         const ang = (i / HUB_NODES.length) * Math.PI * 2 - Math.PI / 2;
         const x = 200 + Math.cos(ang) * R;
-        const y = 180 + Math.sin(ang) * R;
+        const y = 200 + Math.sin(ang) * R;
         const Icon = n.icon;
         const c = n.gold ? "#C69214" : "#19C37D";
         return (
